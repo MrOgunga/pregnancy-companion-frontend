@@ -1,0 +1,1210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nerve — Your AI Pregnancy Companion</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --pink:        #F4A7B9;
+      --pink-lt:     #fd97a1;
+      --pink-pale:   #FEF0F3;
+      --lavender:    #C3B1E1;
+      --lav-lt:      #E8DFFC;
+      --lav-pale:    #F5F0FF;
+      --blue:        #AED6F1;
+      --blue-pale:   #EBF5FB;
+      --cream:       #FFFDF9;
+      --gold:        #E8C5A0;
+      --gold-lt:     #F5E6D3;
+      --sage:        #A8C5A0;
+      --ink:         #2D1B2E;
+      --ink-mid:     #5C3D5E;
+      --ink-muted:   #9B7B9E;
+      --border:      rgba(195,177,225,0.25);
+      --serif:       'Cormorant Garamond', Georgia, serif;
+      --sans:        'DM Sans', system-ui, sans-serif;
+      --nav-h:       68px;
+      --max:         1140px;
+      --r:           8px;
+      --r-lg:        20px;
+      --r-xl:        32px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--cream);
+      color: var(--ink);
+      font-family: var(--sans);
+      font-weight: 300;
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+    a { text-decoration: none; color: inherit; }
+    .wrap { max-width: var(--max); margin: 0 auto; padding: 0 28px; }
+
+    /* NAV */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0;
+      height: var(--nav-h);
+      background: rgba(255,253,249,0.92);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+      z-index: 1000;
+    }
+    .nav-inner {
+      display: flex; align-items: center; justify-content: space-between;
+      height: 100%; max-width: var(--max); margin: 0 auto; padding: 0 28px;
+    }
+    .logo {
+      font-family: var(--serif);
+      font-size: 22px; font-weight: 500;
+      color: var(--ink); letter-spacing: 0.03em;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .logo-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--pink); }
+    .nav-links { display: flex; gap: 28px; list-style: none; }
+    .nav-links a {
+      font-size: 12px; font-weight: 400; letter-spacing: 0.07em;
+      text-transform: uppercase; color: var(--ink-muted); transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--pink); }
+    .nav-cta {
+      background: var(--pink); color: white;
+      padding: 9px 22px; border-radius: 100px;
+      font-size: 12px; font-weight: 500; letter-spacing: 0.06em;
+      transition: background 0.2s; white-space: nowrap;
+    }
+    .nav-cta:hover { background: var(--lavender); }
+
+    /* HERO */
+    .hero {
+      min-height: 100vh;
+      padding-top: var(--nav-h);
+      display: flex; align-items: center;
+      position: relative; overflow: hidden;
+    }
+    .hero-bg {
+      position: absolute; inset: 0; pointer-events: none; z-index: 0;
+    }
+    .hero-orb {
+      position: absolute; border-radius: 50%;
+      filter: blur(80px); opacity: 0.45;
+    }
+    .orb1 { width: 600px; height: 600px; background: var(--pink-pale); top: -100px; right: -100px; }
+    .orb2 { width: 400px; height: 400px; background: var(--lav-pale); bottom: -50px; left: -80px; }
+    .orb3 { width: 300px; height: 300px; background: var(--blue-pale); top: 50%; left: 40%; }
+
+    .hero-inner {
+      position: relative; z-index: 1;
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 64px; align-items: center;
+      padding: 80px 28px;
+      max-width: var(--max); margin: 0 auto; width: 100%;
+    }
+    .hero-eyebrow {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: var(--pink-pale); border: 1px solid var(--pink-lt);
+      border-radius: 100px; padding: 6px 16px;
+      font-size: 11px; font-weight: 500; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--pink);
+      margin-bottom: 24px;
+    }
+    .eyebrow-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--pink); animation: pulse 2s infinite; }
+    @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.6;transform:scale(0.8)} }
+
+    .hero-h {
+      font-family: var(--serif);
+      font-size: clamp(44px, 5vw, 72px);
+      font-weight: 300; line-height: 1.08;
+      letter-spacing: -0.01em; color: var(--ink);
+      margin-bottom: 24px;
+    }
+    .hero-h em { font-style: italic; color: var(--pink); }
+    .hero-h .lav { color: var(--lavender); }
+    .hero-p {
+      font-size: 15px; color: var(--ink-muted);
+      line-height: 1.9; max-width: 420px; margin-bottom: 40px;
+    }
+    .hero-btns { display: flex; gap: 14px; align-items: center; flex-wrap: wrap; }
+    .btn-pink {
+      background: var(--pink); color: white;
+      padding: 15px 32px; border-radius: 100px;
+      font-size: 13px; font-weight: 500; letter-spacing: 0.05em;
+      border: none; cursor: pointer; transition: all 0.2s;
+      display: inline-flex; align-items: center; gap: 8px;
+    }
+    .btn-pink:hover { background: var(--lavender); transform: translateY(-1px); box-shadow: 0 8px 24px rgba(195,177,225,0.4); }
+    .btn-ghost {
+      color: var(--ink-mid); font-size: 13px; letter-spacing: 0.05em;
+      display: flex; align-items: center; gap: 6px;
+      transition: color 0.2s; cursor: pointer; background: none; border: none;
+    }
+    .btn-ghost:hover { color: var(--pink); }
+    .btn-ghost::after { content: '→'; }
+
+    .hero-trust {
+      display: flex; gap: 24px; margin-top: 40px;
+      padding-top: 32px; border-top: 1px solid var(--border);
+      flex-wrap: wrap;
+    }
+    .trust-item { display: flex; align-items: center; gap: 8px; }
+    .trust-icon { font-size: 14px; }
+    .trust-text { font-size: 12px; color: var(--ink-muted); }
+
+    /* ============================================
+       HERO RIGHT — SVG Illustration + Floating Pills
+       CHANGED: replaced old float cards with SVG
+    ============================================ */
+    .hero-right {
+      position: relative;
+      height: 520px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .hero-illustration {
+      position: relative;
+      width: 290px;
+      height: 410px;
+      z-index: 2;
+    }
+    .hero-illustration svg {
+      width: 100%;
+      height: 100%;
+      filter: drop-shadow(0 24px 56px rgba(244,167,185,0.22));
+    }
+    .hero-illustration::before {
+      content: '';
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 340px; height: 340px;
+      background: radial-gradient(circle, rgba(244,167,185,0.15) 0%, transparent 70%);
+      border-radius: 50%;
+      z-index: -1;
+      animation: glowPulse 4s ease-in-out infinite;
+    }
+    @keyframes glowPulse {
+      0%,100% { opacity: 0.6; transform: translate(-50%,-50%) scale(1); }
+      50%      { opacity: 1;   transform: translate(-50%,-50%) scale(1.08); }
+    }
+
+    /* Floating stat pills */
+    .float-pill {
+      position: absolute;
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: var(--r-lg);
+      padding: 12px 18px;
+      box-shadow: 0 10px 36px rgba(195,177,225,0.22);
+      z-index: 3;
+    }
+    .fp-weight  { top: 38px;  left: -32px;  animation: floatA 5s ease-in-out infinite; }
+    .fp-size    { top: 22px;  right: -8px;  animation: floatB 5s ease-in-out infinite; }
+    .fp-week    { top: 48%;   right: -40px; animation: floatA 5s ease-in-out infinite 0.8s; transform: translateY(-50%); }
+    .fp-sent    { bottom: 52px; left: -16px; animation: floatB 5s ease-in-out infinite 1.6s; }
+
+    @keyframes floatA { 0%,100%{transform:translateY(0)}    50%{transform:translateY(-10px)} }
+    @keyframes floatB { 0%,100%{transform:translateY(-5px)} 50%{transform:translateY(5px)} }
+    .fp-week { animation: floatWeek 5s ease-in-out infinite 0.8s; }
+    @keyframes floatWeek { 0%,100%{transform:translateY(calc(-50% + 0px))} 50%{transform:translateY(calc(-50% - 10px))} }
+
+    .pill-label {
+      font-size: 9px; letter-spacing: 0.14em; text-transform: uppercase;
+      color: var(--pink); margin-bottom: 3px; font-weight: 500;
+    }
+    .pill-val {
+      font-family: var(--serif); font-size: 16px;
+      color: var(--ink); font-weight: 400; white-space: nowrap;
+    }
+    .pill-big {
+      font-family: var(--serif); font-size: 44px;
+      font-weight: 300; color: var(--pink); line-height: 1;
+    }
+    .pill-sub { font-size: 11px; color: var(--ink-muted); margin-top: 2px; }
+
+    /* HOW IT WORKS */
+    #how { background: white; padding: 100px 0; }
+    .s-label { font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--pink); font-weight: 500; margin-bottom: 14px; }
+    .s-title { font-family: var(--serif); font-size: clamp(34px,4vw,52px); font-weight: 300; line-height: 1.12; color: var(--ink); margin-bottom: 16px; }
+    .s-title em { font-style: italic; color: var(--lavender); }
+    .s-sub { font-size: 14px; color: var(--ink-muted); line-height: 1.9; max-width: 500px; }
+
+    .how-header { text-align: center; margin-bottom: 72px; }
+    .how-header .s-sub { margin: 0 auto; }
+
+    .video-container {
+      position: relative; border-radius: var(--r-xl); overflow: hidden;
+      background: var(--ink); margin-bottom: 72px;
+      box-shadow: 0 32px 80px rgba(195,177,225,0.3);
+    }
+    .video-placeholder {
+      aspect-ratio: 16/9; display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      background: linear-gradient(135deg, var(--ink), var(--ink-mid));
+      cursor: pointer; position: relative;
+    }
+    .video-placeholder iframe {
+      position: absolute; inset: 0; width: 100%; height: 100%; border: none;
+    }
+    .play-btn {
+      width: 72px; height: 72px; border-radius: 50%;
+      background: rgba(255,255,255,0.15); border: 2px solid rgba(255,255,255,0.3);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 24px; color: white; cursor: pointer;
+      transition: all 0.2s; z-index: 1;
+    }
+    .play-btn:hover { background: var(--pink); border-color: var(--pink); }
+    .video-caption { font-size: 13px; color: rgba(255,255,255,0.5); margin-top: 14px; z-index: 1; }
+
+    .steps-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 2px; }
+    .step-card {
+      padding: 36px 28px; border: 1px solid var(--border); border-radius: var(--r);
+      transition: all 0.3s; background: var(--cream);
+    }
+    .step-card:hover { background: white; box-shadow: 0 16px 48px rgba(195,177,225,0.2); transform: translateY(-4px); }
+    .step-num {
+      font-family: var(--serif); font-size: 48px; font-weight: 300;
+      color: var(--pink-lt); line-height: 1; margin-bottom: 16px;
+    }
+    .step-title { font-size: 16px; font-weight: 500; color: var(--ink); margin-bottom: 8px; }
+    .step-desc { font-size: 13px; color: var(--ink-muted); line-height: 1.8; }
+
+    /* FEATURES */
+    #features { padding: 100px 0; background: var(--cream); }
+    .features-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 3px; margin-top: 64px; }
+    .feat-card {
+      padding: 40px 36px; border-radius: var(--r);
+      transition: transform 0.3s;
+    }
+    .feat-card:hover { transform: translateY(-3px); }
+    .fc-pink { background: var(--pink-pale); border: 1px solid var(--pink-lt); }
+    .fc-lav { background: var(--lav-pale); border: 1px solid var(--lav-lt); }
+    .fc-blue { background: var(--blue-pale); border: 1px solid rgba(174,214,241,0.4); }
+    .fc-gold { background: var(--gold-lt); border: 1px solid rgba(232,197,160,0.4); }
+    .feat-icon { font-size: 28px; margin-bottom: 16px; }
+    .feat-title { font-family: var(--serif); font-size: 22px; font-weight: 400; color: var(--ink); margin-bottom: 10px; }
+    .feat-desc { font-size: 13px; color: var(--ink-muted); line-height: 1.8; }
+    .feat-tag {
+      display: inline-block; margin-top: 14px;
+      background: white; border-radius: 100px;
+      padding: 5px 14px; font-size: 10px;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--ink-mid); font-weight: 500;
+    }
+
+    /* REGISTRATION */
+    #register { padding: 100px 0; background: white; }
+    .register-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: start; }
+    .reg-side-title {
+      font-family: var(--serif); font-size: clamp(32px,3.5vw,48px);
+      font-weight: 300; line-height: 1.15; margin-bottom: 18px;
+    }
+    .reg-side-title em { font-style: italic; color: var(--pink); }
+    .reg-side-p { font-size: 14px; color: var(--ink-muted); line-height: 1.9; margin-bottom: 40px; }
+
+    .promise-list { display: flex; flex-direction: column; gap: 16px; }
+    .promise-row { display: flex; gap: 14px; align-items: flex-start; }
+    .p-icon {
+      width: 36px; height: 36px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px; flex-shrink: 0;
+    }
+    .p-icon.pink { background: var(--pink-pale); }
+    .p-icon.lav { background: var(--lav-pale); }
+    .p-icon.blue { background: var(--blue-pale); }
+    .p-name { font-size: 13px; font-weight: 500; color: var(--ink); margin-bottom: 2px; }
+    .p-desc { font-size: 12px; color: var(--ink-muted); line-height: 1.6; }
+
+    .form-card {
+      background: var(--cream); border: 1px solid var(--border);
+      border-radius: var(--r-xl); padding: 44px;
+    }
+    .fc-head { font-family: var(--serif); font-size: 26px; font-weight: 400; margin-bottom: 6px; }
+    .fc-sub { font-size: 12px; color: var(--ink-muted); margin-bottom: 32px; }
+
+    .fg { margin-bottom: 16px; }
+    label {
+      display: block; font-size: 10px; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--ink-muted);
+      font-weight: 500; margin-bottom: 7px;
+    }
+    input, select, textarea {
+      width: 100%; background: white;
+      border: 1px solid var(--border); border-radius: var(--r);
+      padding: 13px 15px; font-size: 13px;
+      font-family: var(--sans); color: var(--ink);
+      outline: none; transition: border-color 0.2s;
+      -webkit-appearance: none; appearance: none;
+    }
+    input:focus, select:focus, textarea:focus { border-color: var(--pink); }
+    .f-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+    .f-submit {
+      width: 100%; background: var(--pink); color: white;
+      border: none; padding: 15px; border-radius: 100px;
+      font-size: 13px; letter-spacing: 0.07em; text-transform: uppercase;
+      font-weight: 500; font-family: var(--sans);
+      cursor: pointer; margin-top: 8px; transition: all 0.2s;
+    }
+    .f-submit:hover { background: var(--lavender); transform: translateY(-1px); }
+    .f-submit:disabled { background: var(--ink-muted); cursor: not-allowed; transform: none; }
+    .f-note { font-size: 10px; color: var(--ink-muted); text-align: center; margin-top: 12px; }
+
+    .f-success { display: none; text-align: center; padding: 48px 20px; }
+    .f-success.show { display: block; }
+    .fs-icon { font-size: 40px; margin-bottom: 16px; }
+    .fs-title { font-family: var(--serif); font-size: 28px; margin-bottom: 10px; }
+    .fs-msg { font-size: 13px; color: var(--ink-muted); line-height: 1.8; }
+
+    /* TESTIMONIALS */
+    #stories { padding: 100px 0; background: var(--lav-pale); }
+    .testi-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 20px; margin-top: 56px; }
+    .testi-card {
+      background: white; border-radius: var(--r-lg);
+      padding: 32px; border: 1px solid var(--border);
+    }
+    .testi-stars { color: var(--gold); font-size: 14px; margin-bottom: 14px; }
+    .testi-text { font-family: var(--serif); font-size: 16px; font-style: italic; color: var(--ink); line-height: 1.7; margin-bottom: 20px; }
+    .testi-author { display: flex; align-items: center; gap: 10px; }
+    .testi-avatar {
+      width: 38px; height: 38px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px; flex-shrink: 0;
+    }
+    .av1 { background: var(--pink-pale); }
+    .av2 { background: var(--lav-pale); }
+    .av3 { background: var(--blue-pale); }
+    .testi-name { font-size: 13px; font-weight: 500; color: var(--ink); }
+    .testi-week { font-size: 11px; color: var(--ink-muted); }
+
+    /* FOOTER */
+    footer { background: var(--ink); padding: 56px 0 40px; }
+    .foot-grid { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 48px; margin-bottom: 48px; }
+    .foot-logo { font-family: var(--serif); font-size: 22px; font-weight: 500; color: white; margin-bottom: 12px; }
+    .foot-logo span { color: var(--pink); }
+    .foot-desc { font-size: 13px; color: rgba(255,255,255,0.4); line-height: 1.8; max-width: 280px; }
+    .foot-col-title { font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; color: rgba(255,255,255,0.3); margin-bottom: 16px; font-weight: 500; }
+    .foot-links { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+    .foot-links a { font-size: 13px; color: rgba(255,255,255,0.5); transition: color 0.2s; }
+    .foot-links a:hover { color: var(--pink); }
+    .foot-bottom { display: flex; justify-content: space-between; align-items: center; padding-top: 32px; border-top: 1px solid rgba(255,255,255,0.08); }
+    .foot-copy { font-size: 11px; color: rgba(255,255,255,0.25); }
+
+    /* CHATBOT */
+    .nerve-bubble { position: fixed; bottom: 28px; right: 28px; z-index: 9999; }
+    .nerve-btn {
+      width: 60px; height: 60px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--pink), var(--lavender));
+      border: none; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 8px 32px rgba(244,167,185,0.45);
+      transition: transform 0.2s, box-shadow 0.2s;
+      font-size: 22px;
+    }
+    .nerve-btn:hover { transform: scale(1.08); box-shadow: 0 12px 40px rgba(244,167,185,0.55); }
+    .nerve-online {
+      position: absolute; top: 2px; right: 2px;
+      width: 14px; height: 14px; border-radius: 50%;
+      background: #4CAF50; border: 2px solid white;
+    }
+    .nerve-popup {
+      position: absolute; bottom: 74px; right: 0;
+      width: 340px; background: white;
+      border: 1px solid var(--border); border-radius: var(--r-xl);
+      box-shadow: 0 24px 64px rgba(195,177,225,0.35);
+      overflow: hidden; opacity: 0; pointer-events: none;
+      transform: translateY(12px) scale(0.96);
+      transition: all 0.28s cubic-bezier(0.34,1.56,0.64,1);
+      transform-origin: bottom right;
+    }
+    .nerve-popup.open { opacity: 1; pointer-events: all; transform: translateY(0) scale(1); }
+    .np-header {
+      background: linear-gradient(135deg, var(--pink), var(--lavender));
+      padding: 18px 20px; display: flex; align-items: center; gap: 12px;
+    }
+    .np-avatar {
+      width: 42px; height: 42px; border-radius: 50%;
+      background: rgba(255,255,255,0.2);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px; flex-shrink: 0;
+    }
+    .np-name { font-size: 15px; font-weight: 500; color: white; }
+    .np-status { font-size: 11px; color: rgba(255,255,255,0.75); display: flex; align-items: center; gap: 4px; }
+    .np-status-dot { width: 6px; height: 6px; border-radius: 50%; background: #4CAF50; }
+    .np-close { margin-left: auto; background: none; border: none; color: rgba(255,255,255,0.7); cursor: pointer; font-size: 18px; padding: 2px 6px; }
+    .np-messages { padding: 20px; height: 220px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; }
+    .np-msg {
+      max-width: 88%; padding: 10px 14px; border-radius: 16px;
+      font-size: 13px; line-height: 1.6; animation: msgIn 0.3s ease both;
+    }
+    @keyframes msgIn { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+    .np-msg.nerve { background: var(--pink-pale); color: var(--ink); border-bottom-left-radius: 4px; align-self: flex-start; }
+    .np-msg.user { background: var(--pink); color: white; border-bottom-right-radius: 4px; align-self: flex-end; }
+    .np-typing { display: flex; gap: 4px; align-items: center; padding: 10px 14px; background: var(--pink-pale); border-radius: 16px; border-bottom-left-radius: 4px; align-self: flex-start; max-width: 70px; }
+    .np-typing span { width: 7px; height: 7px; border-radius: 50%; background: var(--pink); animation: typing 1.2s infinite; }
+    .np-typing span:nth-child(2) { animation-delay: 0.2s; }
+    .np-typing span:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes typing { 0%,60%,100%{transform:translateY(0);opacity:0.4} 30%{transform:translateY(-6px);opacity:1} }
+    .np-input-area { padding: 14px 16px; border-top: 1px solid var(--border); display: flex; gap: 8px; align-items: center; }
+    .np-input {
+      flex: 1; border: 1px solid var(--border); border-radius: 100px;
+      padding: 9px 14px; font-size: 13px; font-family: var(--sans);
+      color: var(--ink); outline: none; transition: border-color 0.2s;
+      background: var(--cream);
+    }
+    .np-input:focus { border-color: var(--pink); }
+    .np-send {
+      width: 34px; height: 34px; border-radius: 50%;
+      background: var(--pink); border: none; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      color: white; font-size: 14px; transition: background 0.2s; flex-shrink: 0;
+    }
+    .np-send:hover { background: var(--lavender); }
+    .np-voice-btn {
+      width: 34px; height: 34px; border-radius: 50%;
+      background: var(--lav-pale); border: 1px solid var(--lav-lt);
+      cursor: pointer; display: flex; align-items: center;
+      justify-content: center; font-size: 14px; transition: all 0.2s; flex-shrink: 0;
+    }
+    .np-voice-btn:hover { background: var(--lavender); }
+    .np-voice-btn.speaking { background: var(--lavender); animation: speakPulse 1s ease-in-out infinite; }
+    @keyframes speakPulse { 0%,100%{box-shadow:0 0 0 0 rgba(195,177,225,0.5)} 50%{box-shadow:0 0 0 8px rgba(195,177,225,0)} }
+
+    /* SCROLL REVEAL */
+    .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.65s ease, transform 0.65s ease; }
+    .reveal.visible { opacity: 1; transform: none; }
+    .d1{transition-delay:0.1s} .d2{transition-delay:0.2s} .d3{transition-delay:0.3s}
+
+    /* RESPONSIVE */
+    @media(max-width:860px){
+      .hero-inner{grid-template-columns:1fr;padding:60px 28px}
+      .hero-right{display:none}
+      .steps-grid{grid-template-columns:1fr}
+      .features-grid{grid-template-columns:1fr}
+      .register-layout{grid-template-columns:1fr;gap:44px}
+      .f-row{grid-template-columns:1fr}
+      .testi-grid{grid-template-columns:1fr}
+      .foot-grid{grid-template-columns:1fr}
+      .foot-bottom{flex-direction:column;gap:12px;text-align:center}
+      .nav-links{display:none}
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-inner">
+    <div class="logo"><div class="logo-dot"></div>Nerve</div>
+    <ul class="nav-links">
+      <li><a href="#how">How It Works</a></li>
+      <li><a href="#features">Features</a></li>
+      <li><a href="#stories">Stories</a></li>
+      <li><a href="#register">Register</a></li>
+    </ul>
+    <a href="#register" class="nav-cta">Start Your Journey</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="home">
+  <div class="hero-bg">
+    <div class="hero-orb orb1"></div>
+    <div class="hero-orb orb2"></div>
+    <div class="hero-orb orb3"></div>
+  </div>
+  <div class="hero-inner">
+    <div>
+      <div class="hero-eyebrow"><div class="eyebrow-dot"></div>AI Pregnancy Companion</div>
+      <h1 class="hero-h">
+        Every week,<br />
+        <em>beautifully</em><br />
+        <span class="lav">guided.</span>
+      </h1>
+      <p class="hero-p">
+        Personalised weekly updates, fetal development insights, meal plans and
+        emotional support — delivered to you every Monday by your AI companion, Nerve.
+      </p>
+      <div class="hero-btns">
+        <button class="btn-pink" onclick="document.getElementById('register').scrollIntoView({behavior:'smooth'})">
+          Begin My Journey ✨
+        </button>
+        <button class="btn-ghost" onclick="document.getElementById('how').scrollIntoView({behavior:'smooth'})">
+          See How It Works
+        </button>
+      </div>
+      <div class="hero-trust">
+        <div class="trust-item"><div class="trust-icon">🌸</div><div class="trust-text">Personalised to your week</div></div>
+        <div class="trust-item"><div class="trust-icon">🥗</div><div class="trust-text">Weekly meal plans</div></div>
+        <div class="trust-item"><div class="trust-icon">💌</div><div class="trust-text">Partner notes included</div></div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════
+         HERO RIGHT — SVG Illustration
+         CHANGED SECTION: replaced old float cards
+    ════════════════════════════════════════════ -->
+    <div class="hero-right">
+
+      <!-- Floating pill: baby weight -->
+      <div class="float-pill fp-weight">
+        <div class="pill-label">Baby weight</div>
+        <div class="pill-val">14 grams 🌱</div>
+      </div>
+
+      <!-- Floating pill: size -->
+      <div class="float-pill fp-size">
+        <div class="pill-label">Size this week</div>
+        <div class="pill-val">🍋 A lime</div>
+      </div>
+
+      <!-- Central SVG pregnancy illustration -->
+      <div class="hero-illustration">
+        <svg viewBox="0 0 300 420" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <radialGradient id="skinG" cx="50%" cy="40%" r="60%">
+              <stop offset="0%" stop-color="#F5CBA7"/>
+              <stop offset="100%" stop-color="#DC9A6A"/>
+            </radialGradient>
+            <radialGradient id="bellyG" cx="45%" cy="45%" r="60%">
+              <stop offset="0%" stop-color="#FDEBD0"/>
+              <stop offset="100%" stop-color="#E8956B"/>
+            </radialGradient>
+            <radialGradient id="wombG" cx="50%" cy="50%" r="55%">
+              <stop offset="0%" stop-color="rgba(255,240,245,0.9)"/>
+              <stop offset="70%" stop-color="rgba(244,167,185,0.3)"/>
+              <stop offset="100%" stop-color="rgba(195,177,225,0.25)"/>
+            </radialGradient>
+            <radialGradient id="babyG" cx="50%" cy="35%" r="60%">
+              <stop offset="0%" stop-color="#FDEBD0"/>
+              <stop offset="100%" stop-color="#DFA86E"/>
+            </radialGradient>
+            <filter id="softGlow" x="-20%" y="-20%" width="140%" height="140%">
+              <feGaussianBlur stdDeviation="2.5" result="blur"/>
+              <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+            <filter id="innerShadow" x="-10%" y="-10%" width="120%" height="120%">
+              <feGaussianBlur stdDeviation="4" in="SourceAlpha" result="shadow"/>
+              <feOffset dx="0" dy="3"/>
+              <feComposite in2="SourceAlpha" operator="arithmetic" k2="-1" k3="1" result="shadowInner"/>
+              <feFlood flood-color="rgba(220,120,100,0.3)" result="color"/>
+              <feComposite in="color" in2="shadowInner" operator="in" result="shadow"/>
+              <feMerge><feMergeNode in="shadow"/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+          </defs>
+
+          <!-- ── HAIR (behind head) ── -->
+          <ellipse cx="150" cy="32" rx="38" ry="24" fill="#2C1810"/>
+          <path d="M112 55 Q100 85 104 120 Q108 140 112 155" stroke="#2C1810" stroke-width="14" stroke-linecap="round" fill="none"/>
+          <path d="M188 55 Q200 85 196 120 Q192 140 188 155" stroke="#2C1810" stroke-width="14" stroke-linecap="round" fill="none"/>
+          <!-- Hair side volumes -->
+          <ellipse cx="113" cy="62" rx="12" ry="32" fill="#2C1810"/>
+          <ellipse cx="187" cy="62" rx="12" ry="32" fill="#2C1810"/>
+
+          <!-- ── HEAD ── -->
+          <ellipse cx="150" cy="62" rx="37" ry="43" fill="url(#skinG)"/>
+
+          <!-- Face features -->
+          <!-- Eyebrows -->
+          <path d="M127 50 Q136 46 143 50" stroke="#5C3020" stroke-width="2.2" stroke-linecap="round" fill="none"/>
+          <path d="M157 50 Q164 46 173 50" stroke="#5C3020" stroke-width="2.2" stroke-linecap="round" fill="none"/>
+          <!-- Eyes -->
+          <ellipse cx="137" cy="60" rx="7" ry="6" fill="#1A0F0A"/>
+          <ellipse cx="163" cy="60" rx="7" ry="6" fill="#1A0F0A"/>
+          <circle cx="139" cy="58" r="2.5" fill="white"/>
+          <circle cx="165" cy="58" r="2.5" fill="white"/>
+          <circle cx="140" cy="57.5" r="1" fill="white" opacity="0.8"/>
+          <!-- Nose -->
+          <path d="M147 68 Q150 74 153 68" stroke="#C8856C" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+          <!-- Warm smile -->
+          <path d="M140 78 Q150 85 160 78" stroke="#C8856C" stroke-width="2" fill="none" stroke-linecap="round"/>
+          <!-- Cheek blush -->
+          <ellipse cx="126" cy="70" rx="9" ry="6" fill="rgba(244,167,185,0.3)"/>
+          <ellipse cx="174" cy="70" rx="9" ry="6" fill="rgba(244,167,185,0.3)"/>
+          <!-- Ears -->
+          <ellipse cx="113" cy="66" rx="7" ry="10" fill="#DC9A6A"/>
+          <ellipse cx="187" cy="66" rx="7" ry="10" fill="#DC9A6A"/>
+
+          <!-- ── NECK ── -->
+          <rect x="136" y="100" width="28" height="26" rx="10" fill="url(#skinG)"/>
+
+          <!-- ── DRESS / TOP ── -->
+          <!-- Shoulder area -->
+          <path d="M110 118 Q88 135 75 165 Q68 195 65 225 Q62 270 65 360 Q100 378 150 376 Q200 378 235 360 Q238 270 235 225 Q232 195 225 165 Q212 135 190 118 Q175 112 150 110 Q125 112 110 118Z"
+            fill="rgba(244,167,185,0.6)" stroke="rgba(244,167,185,0.5)" stroke-width="1.2"/>
+
+          <!-- Dress neckline detail -->
+          <path d="M120 114 Q150 126 180 114"
+            stroke="rgba(255,255,255,0.6)" stroke-width="2" fill="none" stroke-linecap="round"/>
+
+          <!-- ── ARMS ── -->
+          <!-- Left arm resting under belly -->
+          <path d="M75 185 Q58 220 62 260 Q68 285 82 296"
+            stroke="#DC9A6A" stroke-width="24" stroke-linecap="round" fill="none"/>
+          <!-- Left hand -->
+          <ellipse cx="88" cy="300" rx="18" ry="13" fill="#DC9A6A" transform="rotate(-15,88,300)"/>
+          <!-- Finger lines -->
+          <path d="M78 298 Q88 294 98 298" stroke="rgba(180,100,60,0.4)" stroke-width="1" fill="none"/>
+          <path d="M76 303 Q88 299 100 303" stroke="rgba(180,100,60,0.4)" stroke-width="1" fill="none"/>
+
+          <!-- Right arm -->
+          <path d="M225 185 Q242 220 238 260 Q232 285 218 296"
+            stroke="#DC9A6A" stroke-width="24" stroke-linecap="round" fill="none"/>
+          <!-- Right hand -->
+          <ellipse cx="212" cy="300" rx="18" ry="13" fill="#DC9A6A" transform="rotate(15,212,300)"/>
+          <path d="M202 298 Q212 294 222 298" stroke="rgba(180,100,60,0.4)" stroke-width="1" fill="none"/>
+          <path d="M200 303 Q212 299 224 303" stroke="rgba(180,100,60,0.4)" stroke-width="1" fill="none"/>
+
+          <!-- ── PREGNANT BELLY ── -->
+          <!-- Main belly bump -->
+          <ellipse cx="150" cy="248" rx="76" ry="72"
+            fill="url(#bellyG)"
+            stroke="rgba(220,154,106,0.3)" stroke-width="1.5"/>
+
+          <!-- Belly highlight -->
+          <ellipse cx="134" cy="224" rx="26" ry="20"
+            fill="rgba(255,255,255,0.2)" transform="rotate(-18,134,224)"/>
+
+          <!-- Belly button -->
+          <ellipse cx="150" cy="222" rx="5" ry="4"
+            fill="rgba(180,100,60,0.25)" filter="url(#innerShadow)"/>
+
+          <!-- ── WOMB WINDOW (transparent belly view) ── -->
+          <!-- Outer dashed ring -->
+          <ellipse cx="150" cy="252" rx="54" ry="52"
+            fill="none"
+            stroke="rgba(244,167,185,0.55)" stroke-width="1.8"
+            stroke-dasharray="5 3.5"
+            opacity="0.9"/>
+
+          <!-- Womb glow ring -->
+          <ellipse cx="150" cy="252" rx="48" ry="46"
+            fill="rgba(255,245,248,0.7)"
+            stroke="rgba(244,167,185,0.45)" stroke-width="1.2"/>
+
+          <!-- Amniotic fluid -->
+          <ellipse cx="150" cy="252" rx="46" ry="44"
+            fill="url(#wombG)"/>
+
+          <!-- Fluid shimmer -->
+          <ellipse cx="138" cy="238" rx="20" ry="14"
+            fill="rgba(255,255,255,0.2)" transform="rotate(-22,138,238)"/>
+          <ellipse cx="162" cy="264" rx="14" ry="9"
+            fill="rgba(255,255,255,0.12)" transform="rotate(10,162,264)"/>
+
+          <!-- ── BABY INSIDE ── -->
+          <!-- Baby body (curled fetal position) -->
+          <ellipse cx="158" cy="258" rx="24" ry="20"
+            fill="url(#babyG)" filter="url(#softGlow)"/>
+
+          <!-- Baby head -->
+          <circle cx="143" cy="238" r="15"
+            fill="url(#babyG)" filter="url(#softGlow)"/>
+
+          <!-- Baby face (tiny, peaceful) -->
+          <!-- Eyes closed -->
+          <path d="M138 236 Q140.5 234 143 236" stroke="#C07040" stroke-width="1.3" stroke-linecap="round" fill="none"/>
+          <path d="M144 236 Q146.5 234 149 236" stroke="#C07040" stroke-width="1.3" stroke-linecap="round" fill="none"/>
+          <!-- Tiny nose -->
+          <circle cx="143" cy="239" r="1.3" fill="#C07040" opacity="0.5"/>
+          <!-- Peaceful micro-smile -->
+          <path d="M140 243 Q143 245 146 243" stroke="#C07040" stroke-width="1.1" stroke-linecap="round" fill="none"/>
+
+          <!-- Baby arm (curled) -->
+          <path d="M162 248 Q172 240 170 232 Q167 226 161 229"
+            stroke="#DFA86E" stroke-width="6" stroke-linecap="round" fill="none" filter="url(#softGlow)"/>
+
+          <!-- Baby knee/leg (curled up) -->
+          <path d="M170 264 Q180 274 176 283 Q171 288 164 283"
+            stroke="#DFA86E" stroke-width="6" stroke-linecap="round" fill="none" filter="url(#softGlow)"/>
+
+          <!-- Baby tiny foot -->
+          <ellipse cx="161" cy="285" rx="9" ry="7"
+            fill="#DFA86E" transform="rotate(-10,161,285)" filter="url(#softGlow)"/>
+
+          <!-- Umbilical cord -->
+          <path d="M150 276 Q146 286 148 294"
+            stroke="rgba(244,167,185,0.75)" stroke-width="3"
+            stroke-linecap="round" fill="none"/>
+
+          <!-- ── HEARTBEAT LINE ── -->
+          <path d="M102 252 L116 252 L122 238 L128 266 L135 252 L148 252"
+            stroke="rgba(244,167,185,0.7)" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+
+          <!-- ── SPARKLE ACCENTS ── -->
+          <!-- Top left sparkle -->
+          <g opacity="0.8">
+            <circle cx="76" cy="148" r="3" fill="#F4A7B9"/>
+            <line x1="76" y1="141" x2="76" y2="145" stroke="#F4A7B9" stroke-width="1.5" stroke-linecap="round"/>
+            <line x1="76" y1="151" x2="76" y2="155" stroke="#F4A7B9" stroke-width="1.5" stroke-linecap="round"/>
+            <line x1="69" y1="148" x2="73" y2="148" stroke="#F4A7B9" stroke-width="1.5" stroke-linecap="round"/>
+            <line x1="79" y1="148" x2="83" y2="148" stroke="#F4A7B9" stroke-width="1.5" stroke-linecap="round"/>
+          </g>
+          <!-- Top right sparkle -->
+          <g opacity="0.7">
+            <circle cx="224" cy="162" r="2.2" fill="#C3B1E1"/>
+            <line x1="224" y1="157" x2="224" y2="160" stroke="#C3B1E1" stroke-width="1.3" stroke-linecap="round"/>
+            <line x1="224" y1="164" x2="224" y2="167" stroke="#C3B1E1" stroke-width="1.3" stroke-linecap="round"/>
+            <line x1="219" y1="162" x2="222" y2="162" stroke="#C3B1E1" stroke-width="1.3" stroke-linecap="round"/>
+            <line x1="226" y1="162" x2="229" y2="162" stroke="#C3B1E1" stroke-width="1.3" stroke-linecap="round"/>
+          </g>
+          <!-- Bottom sparkles -->
+          <circle cx="92" cy="318" r="2" fill="#F4A7B9" opacity="0.5"/>
+          <circle cx="208" cy="310" r="1.6" fill="#C3B1E1" opacity="0.5"/>
+          <circle cx="240" cy="240" r="1.4" fill="#F4A7B9" opacity="0.4"/>
+
+        </svg>
+      </div>
+
+      <!-- Floating pill: week number -->
+      <div class="float-pill fp-week">
+        <div class="pill-label">You are in</div>
+        <div class="pill-big">12</div>
+        <div class="pill-sub">Weeks ✓</div>
+      </div>
+
+      <!-- Floating pill: sent Monday -->
+      <div class="float-pill fp-sent">
+        <div class="pill-label">Weekly update</div>
+        <div class="pill-val">Sent Monday ✓</div>
+      </div>
+
+    </div>
+    <!-- ═══ END CHANGED SECTION ═══ -->
+
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section id="how">
+  <div class="wrap">
+    <div class="how-header reveal">
+      <p class="s-label">How It Works</p>
+      <h2 class="s-title">Simple, <em>beautiful</em> care</h2>
+      <p class="s-sub">From registration to weekly updates — here's exactly how Nerve walks with you through every week of your journey.</p>
+    </div>
+
+    <div class="video-container reveal">
+      <div class="video-placeholder" id="videoPlaceholder">
+        <div class="play-btn" onclick="loadVideo()">▶</div>
+        <div class="video-caption">Watch: How Nerve works — full demo</div>
+      </div>
+    </div>
+
+    <div class="steps-grid reveal">
+      <div class="step-card">
+        <div class="step-num">01</div>
+        <div class="step-title">Register your details</div>
+        <div class="step-desc">Fill in your name, due date, dietary needs and partner's name. Takes under 2 minutes.</div>
+      </div>
+      <div class="step-card">
+        <div class="step-num">02</div>
+        <div class="step-title">Nerve calculates your week</div>
+        <div class="step-desc">Every Monday, the system reads your current gestational week and generates a fully personalised update just for you.</div>
+      </div>
+      <div class="step-card">
+        <div class="step-num">03</div>
+        <div class="step-title">Your beautiful page arrives</div>
+        <div class="step-desc">An email arrives with your baby's size, development, 7-day meal plan, fetal image, and a special note for your partner.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section id="features">
+  <div class="wrap">
+    <div class="reveal">
+      <p class="s-label">What You Get</p>
+      <h2 class="s-title">Everything for your <em>journey</em></h2>
+    </div>
+    <div class="features-grid reveal">
+      <div class="feat-card fc-pink">
+        <div class="feat-icon">👶</div>
+        <div class="feat-title">Weekly fetal development</div>
+        <div class="feat-desc">See your baby's actual size, weight and length with a real fetal photo matching your exact week — from week 1 to week 40.</div>
+        <span class="feat-tag">Visual · Medical-grade</span>
+      </div>
+      <div class="feat-card fc-lav">
+        <div class="feat-icon">🥗</div>
+        <div class="feat-title">Personalised 7-day meal plan</div>
+        <div class="feat-desc">Every meal tailored to your trimester, dietary restrictions and what your baby needs most that specific week.</div>
+        <span class="feat-tag">AI-generated · Weekly</span>
+      </div>
+      <div class="feat-card fc-blue">
+        <div class="feat-icon">💌</div>
+        <div class="feat-title">Partner notes</div>
+        <div class="feat-desc">A warm, personal message sent directly to your partner — by name — on what's happening with the baby and how to support you.</div>
+        <span class="feat-tag">Personalised · Heartfelt</span>
+      </div>
+      <div class="feat-card fc-gold">
+        <div class="feat-icon">🎯</div>
+        <div class="feat-title">Milestone celebrations</div>
+        <div class="feat-desc">Special messages at week 13, 27 and 40 — your trimester completions — to celebrate how far you've come.</div>
+        <span class="feat-tag">Automated · Celebratory</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- REGISTRATION FORM -->
+<section id="register">
+  <div class="wrap">
+    <div class="register-layout">
+      <div class="reveal">
+        <p class="s-label">Join Nerve</p>
+        <h2 class="reg-side-title">
+          Your journey<br />
+          starts <em>here</em>
+        </h2>
+        <p class="reg-side-p">
+          Register once and every Monday morning, Nerve will deliver
+          a beautifully personalised pregnancy update straight to your inbox.
+          No app needed. Just love in your email.
+        </p>
+        <div class="promise-list">
+          <div class="promise-row">
+            <div class="p-icon pink">🌸</div>
+            <div><div class="p-name">Weekly updates every Monday</div><div class="p-desc">Automatically sent from week 1 through week 40.</div></div>
+          </div>
+          <div class="promise-row">
+            <div class="p-icon lav">🔒</div>
+            <div><div class="p-name">Private and secure</div><div class="p-desc">Your details are never shared with anyone.</div></div>
+          </div>
+          <div class="promise-row">
+            <div class="p-icon blue">💙</div>
+            <div><div class="p-name">Completely free</div><div class="p-desc">No subscriptions. No hidden fees. Just care.</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="reveal d2">
+        <div class="form-card">
+          <h3 class="fc-head">Register for Nerve</h3>
+          <p class="fc-sub">Fill in your details and your first update arrives next Monday.</p>
+
+          <div id="formContent">
+            <div class="f-row">
+              <div class="fg"><label>Your First Name</label><input type="text" id="fName" placeholder="Amara" /></div>
+              <div class="fg"><label>Partner's Name</label><input type="text" id="fPartner" placeholder="David" /></div>
+            </div>
+            <div class="fg"><label>Email Address</label><input type="email" id="fEmail" placeholder="amara@email.com" /></div>
+            <div class="fg"><label>Phone / WhatsApp</label><input type="tel" id="fPhone" placeholder="+234 800 000 0000" /></div>
+            <div class="fg"><label>Due Date</label><input type="date" id="fDue" /></div>
+            <div class="fg">
+              <label>Current Week of Pregnancy</label>
+              <select id="fWeek">
+                <option value="" disabled selected>Select your current week</option>
+                <option value="1">Week 1</option><option value="2">Week 2</option>
+                <option value="3">Week 3</option><option value="4">Week 4</option>
+                <option value="5">Week 5</option><option value="6">Week 6</option>
+                <option value="7">Week 7</option><option value="8">Week 8</option>
+                <option value="9">Week 9</option><option value="10">Week 10</option>
+                <option value="11">Week 11</option><option value="12">Week 12</option>
+                <option value="13">Week 13</option><option value="14">Week 14</option>
+                <option value="15">Week 15</option><option value="16">Week 16</option>
+                <option value="17">Week 17</option><option value="18">Week 18</option>
+                <option value="19">Week 19</option><option value="20">Week 20</option>
+                <option value="21">Week 21</option><option value="22">Week 22</option>
+                <option value="23">Week 23</option><option value="24">Week 24</option>
+                <option value="25">Week 25</option><option value="26">Week 26</option>
+                <option value="27">Week 27</option><option value="28">Week 28</option>
+                <option value="29">Week 29</option><option value="30">Week 30</option>
+                <option value="31">Week 31</option><option value="32">Week 32</option>
+                <option value="33">Week 33</option><option value="34">Week 34</option>
+                <option value="35">Week 35</option><option value="36">Week 36</option>
+                <option value="37">Week 37</option><option value="38">Week 38</option>
+                <option value="39">Week 39</option><option value="40">Week 40</option>
+              </select>
+            </div>
+            <div class="fg">
+              <label>Is this your first pregnancy?</label>
+              <select id="fFirst">
+                <option value="yes">Yes — first time 🌸</option>
+                <option value="no">No — I've done this before</option>
+              </select>
+            </div>
+            <div class="fg">
+              <label>Dietary Restrictions (optional)</label>
+              <input type="text" id="fDiet" placeholder="e.g. vegetarian, no nuts, lactose intolerant" />
+            </div>
+
+            <button class="f-submit" id="submitBtn" onclick="submitForm()">
+              Begin My Journey ✨
+            </button>
+            <p class="f-note">Your first update arrives next Monday · Completely free</p>
+          </div>
+
+          <div class="f-success" id="fSuccess">
+            <div class="fs-icon">🌸</div>
+            <h3 class="fs-title">Welcome to Nerve</h3>
+            <p class="fs-msg">You're registered! Your first personalised update will arrive next Monday morning. We're so happy to walk this journey with you. 💕</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section id="stories">
+  <div class="wrap">
+    <div class="reveal">
+      <p class="s-label">Mama Stories</p>
+      <h2 class="s-title">From the mamas <em>themselves</em></h2>
+    </div>
+    <div class="testi-grid reveal">
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <div class="testi-text">"The meal plans alone are worth it. Every Monday feels like getting a gift. My husband loved his personalised note — he actually cried."</div>
+        <div class="testi-author"><div class="testi-avatar av1">👩🏾</div><div><div class="testi-name">Chiamaka O.</div><div class="testi-week">Week 28 · Lagos</div></div></div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <div class="testi-text">"Seeing my baby's actual photo every week makes it so real. I didn't know what a 14-week baby looked like until Nerve showed me."</div>
+        <div class="testi-author"><div class="testi-avatar av2">👩🏽</div><div><div class="testi-name">Fatima A.</div><div class="testi-week">Week 19 · Abuja</div></div></div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <div class="testi-text">"First pregnancy and I was terrified. The extra reassurance notes for first-time moms made me feel so seen. I genuinely look forward to Mondays."</div>
+        <div class="testi-author"><div class="testi-avatar av3">👩🏿</div><div><div class="testi-name">Blessing N.</div><div class="testi-week">Week 11 · Port Harcourt</div></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <div class="foot-logo">Nerve <span>Companion</span></div>
+        <p class="foot-desc">AI-powered pregnancy companion delivering personalised weekly care to mamas across Nigeria and beyond.</p>
+      </div>
+      <div>
+        <div class="foot-col-title">Navigate</div>
+        <ul class="foot-links">
+          <li><a href="#how">How It Works</a></li>
+          <li><a href="#features">Features</a></li>
+          <li><a href="#stories">Mama Stories</a></li>
+          <li><a href="#register">Register</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="foot-col-title">Built by</div>
+        <ul class="foot-links">
+          <li><a href="https://thebrandnerve.com" target="_blank">The Brand NERVE</a></li>
+          <li><a href="mailto:thebrandnerve@gmail.com">thebrandnerve@gmail.com</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <div class="foot-copy">© 2025 The Brand Nerve. Built with love for every mama.</div>
+      <div class="foot-copy">Powered by n8n · OpenAI · ElevenLabs</div>
+    </div>
+  </div>
+</footer>
+
+<!-- NERVE AI CHATBOT BUBBLE -->
+<div class="nerve-bubble">
+  <div class="nerve-popup" id="nervePopup">
+    <div class="np-header">
+      <div class="np-avatar">🌸</div>
+      <div>
+        <div class="np-name">Nerve</div>
+        <div class="np-status"><div class="np-status-dot"></div>Online · Your pregnancy companion</div>
+      </div>
+      <button class="np-close" onclick="toggleNerve()">✕</button>
+    </div>
+    <div class="np-messages" id="npMessages"></div>
+    <div class="np-input-area">
+      <input class="np-input" id="npInput" type="text" placeholder="Ask Nerve anything..." onkeydown="if(event.key==='Enter')sendMsg()" />
+      <button class="np-voice-btn" id="voiceBtn" onclick="toggleVoice()" title="Hear Nerve speak">🔊</button>
+      <button class="np-send" onclick="sendMsg()">→</button>
+    </div>
+  </div>
+  <button class="nerve-btn" onclick="toggleNerve()" id="nerveBtn">
+    🌸
+    <div class="nerve-online"></div>
+  </button>
+</div>
+
+<script>
+  const NERVE_CONFIG = Object.freeze({
+    webhookUrl: 'https://taiyelolu.app.n8n.cloud/webhook/pregnancy-beta-signup',
+    voiceEnabled: false
+  });
+
+  function loadVideo() {
+    const placeholder = document.getElementById('videoPlaceholder');
+    placeholder.innerHTML = `<iframe src="https://www.youtube.com/embed/sh5qrU1NIQk?autoplay=1&rel=0" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
+  }
+
+  async function submitForm() {
+    const fName    = document.getElementById('fName').value.trim();
+    const fPartner = document.getElementById('fPartner').value.trim();
+    const fEmail   = document.getElementById('fEmail').value.trim();
+    const fPhone   = document.getElementById('fPhone').value.trim();
+    const fDue     = document.getElementById('fDue').value;
+    const fWeek    = document.getElementById('fWeek').value;
+    const fFirst   = document.getElementById('fFirst').value;
+    const fDiet    = document.getElementById('fDiet').value.trim();
+
+    if (!fName || !fEmail || !fWeek || !fDue) {
+      alert('Please fill in your name, email, due date and current week.');
+      return;
+    }
+
+    const btn = document.getElementById('submitBtn');
+    btn.disabled = true;
+    btn.textContent = 'Registering...';
+
+    const payload = {
+      full_name: fName,
+      email: fEmail,
+      phone: fPhone,
+      whatsapp_number: fPhone,
+      partner_name: fPartner,
+      due_date: fDue,
+      current_week: parseInt(fWeek, 10),
+      first_pregnancy: fFirst,
+      dietary_restrictions: fDiet,
+      source: 'website'
+    };
+
+    try {
+      if (!NERVE_CONFIG.webhookUrl) {
+        throw new Error('Missing secure webhook configuration');
+      }
+
+      await fetch(NERVE_CONFIG.webhookUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+        mode: 'cors'
+      });
+      document.getElementById('formContent').style.display = 'none';
+      document.getElementById('fSuccess').classList.add('show');
+    } catch {
+      btn.disabled = false;
+      btn.textContent = 'Begin My Journey ✨';
+      alert('Registration could not be completed right now. Please try again in a moment.');
+    }
+  }
+
+  const nerveReplies = [
+    "Hello mama! 🌸 I'm Nerve, your pregnancy companion. How are you feeling today?",
+    "Your baby is growing so beautifully right now. What would you like to know about this week?",
+    "Every week is a milestone. You're doing an incredible job. 💕",
+    "I can help you understand your symptoms, meal ideas, or what your baby is developing this week. What's on your mind?",
+    "Remember — every feeling you have is valid. Growing a human being is extraordinary work. 🌿",
+    "Would you like to hear about your baby's development this week? I can walk you through it.",
+    "You're not alone on this journey. I'm here every step of the way. 💌"
+  ];
+
+  let replyIndex = 0, isSpeaking = false, nerveOpen = false;
+
+  function toggleNerve() {
+    nerveOpen = !nerveOpen;
+    document.getElementById('nervePopup').classList.toggle('open', nerveOpen);
+    if (nerveOpen && document.getElementById('npMessages').children.length === 0) {
+      setTimeout(() => addMsg('nerve', nerveReplies[0]), 400);
+    }
+  }
+
+  document.addEventListener('click', function(e) {
+    const bubble = document.querySelector('.nerve-bubble');
+    if (!bubble.contains(e.target)) {
+      nerveOpen = false;
+      document.getElementById('nervePopup').classList.remove('open');
+    }
+  });
+
+  function addMsg(who, text) {
+    const box = document.getElementById('npMessages');
+    const msg = document.createElement('div');
+    msg.className = 'np-msg ' + who;
+    msg.textContent = text;
+    box.appendChild(msg);
+    box.scrollTop = box.scrollHeight;
+    if (who === 'nerve') autoSpeak(text);
+  }
+
+  function showTyping() {
+    const box = document.getElementById('npMessages');
+    const t = document.createElement('div');
+    t.className = 'np-typing'; t.id = 'typingDots';
+    t.innerHTML = '<span></span><span></span><span></span>';
+    box.appendChild(t);
+    box.scrollTop = box.scrollHeight;
+  }
+
+  function removeTyping() {
+    const t = document.getElementById('typingDots');
+    if (t) t.remove();
+  }
+
+  function sendMsg() {
+    const input = document.getElementById('npInput');
+    const text = input.value.trim();
+    if (!text) return;
+    addMsg('user', text);
+    input.value = '';
+    showTyping();
+    setTimeout(() => {
+      removeTyping();
+      replyIndex = (replyIndex + 1) % nerveReplies.length;
+      addMsg('nerve', nerveReplies[replyIndex]);
+    }, 1200 + Math.random() * 800);
+  }
+
+  async function speakText(text) {
+    if (!NERVE_CONFIG.voiceEnabled || !('speechSynthesis' in window)) return;
+    const btn = document.getElementById('voiceBtn');
+    try {
+      btn.classList.add('speaking');
+      isSpeaking = true;
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.onend = () => {
+        btn.classList.remove('speaking');
+        isSpeaking = false;
+      };
+      utterance.onerror = () => {
+        btn.classList.remove('speaking');
+        isSpeaking = false;
+      };
+      window.speechSynthesis.speak(utterance);
+    } catch (e) {
+      btn.classList.remove('speaking');
+      isSpeaking = false;
+    }
+  }
+
+  let lastNerveMsg = '';
+  function autoSpeak(text) { lastNerveMsg = text; }
+  function toggleVoice() { if (lastNerveMsg) speakText(lastNerveMsg); }
+
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); }
+    });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+</script>
+
+</body>
+</html>
+
+
+
+
+
