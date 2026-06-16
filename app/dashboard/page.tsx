@@ -1,0 +1,161 @@
+import { redirect } from "next/navigation";
+import { getSession } from "@/lib/session";
+import { getMotherById, listWeeklyUpdates, getWeeklyUpdateByWeek, updateMotherWeek } from "@/lib/queries";
+import { currentWeekFrom, getBabyData, babySizeText, trimesterFor, progressPct } from "@/lib/babyData";
+import { babyImageFor } from "@/lib/babyImages";
+import { getSettings } from "@/lib/settings";
+import AppHeader from "../_components/AppHeader";
+import WeekExtras from "../_components/WeekExtras";
+
+export const dynamic = "force-dynamic";
+
+export default async function Dashboard() {
+  const session = await getSession();
+  if (!session) redirect("/login");
+  const mother = await getMotherById(session.sub);
+  if (!mother) redirect("/login");
+
+  // Live week — advances automatically with time.
+  const week = currentWeekFrom({ dueDate: mother.due_date, enteredWeek: mother.current_week, createdAt: mother.created_at });
+  const trimester = trimesterFor(week);
+  if (week !== mother.current_week) await updateMotherWeek(mother.id, week, trimester);
+
+  const baby = getBabyData(week);
+  const babyImg = babyImageFor(week);
+  const current = await getWeeklyUpdateByWeek(mother.id, week);
+  const all = await listWeeklyUpdates(mother.id);
+  const premium = mother.plan === "premium";
+  const weeksLeft = Math.max(0, 40 - week);
+  const settings = await getSettings();
+  const features = { journal: settings.journal_enabled, tools: settings.tools_enabled, chat: settings.chat_enabled };
+
+  return (
+    <>
+      <AppHeader plan={mother.plan} active="dashboard" features={features} />
+      <div className="app-shell">
+        <p className="s-label">Your journey</p>
+        <h1 className="s-title" style={{ marginBottom: 6 }}>
+          Hello, <em>{mother.full_name}</em>
+        </h1>
+        <p className="muted" style={{ marginBottom: 24 }}>
+          You&apos;re in <strong>week {week}</strong> · {trimester} trimester ·{" "}
+          {weeksLeft === 0 ? "any day now! 🎉" : `${weeksLeft} weeks to go`}
+        </p>
+
+        {/* Progress bar */}
+        <div style={{ height: 8, background: "var(--lav-pale)", borderRadius: 100, overflow: "hidden", marginBottom: 28 }}>
+          <div style={{ width: `${progressPct(week)}%`, height: "100%", background: "linear-gradient(90deg,var(--pink),var(--lavender))" }} />
+        </div>
+
+        {/* Authoritative baby hero — instant, never waits on AI */}
+        <div className="card" style={{ marginBottom: 20 }}>
+          <p className="s-label">This week</p>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={babyImg.src}
+            alt={`Your baby's development around week ${week}`}
+            width={180}
+            height={180}
+            style={{
+              width: 180,
+              height: 180,
+              objectFit: "cover",
+              borderRadius: "50%",
+              display: "block",
+              margin: "4px auto 6px",
+              border: "5px solid #fff",
+              boxShadow: "0 8px 28px rgba(232,123,146,.28)",
+            }}
+          />
+          <p className="muted" style={{ textAlign: "center", marginBottom: 12, fontSize: 13 }}>{babyImg.stage}</p>
+          <h2 className="feat-title" style={{ fontSize: 26, textAlign: "center" }}>
+            Your baby is {baby ? `${babySizeText(week)}` : "just beginning their journey 🌱"}
+          </h2>
+          {baby && (
+            <div className="grid-2" style={{ marginTop: 14 }}>
+              <div className="card" style={{ background: "var(--pink-pale)", border: "none" }}>
+                <p className="s-label">Length</p>
+                <p style={{ fontFamily: "var(--serif)", fontSize: 28 }}>{baby.lengthCm} cm</p>
+              </div>
+              <div className="card" style={{ background: "var(--lav-pale)", border: "none" }}>
+                <p className="s-label">Weight</p>
+                <p style={{ fontFamily: "var(--serif)", fontSize: 28 }}>
+                  {baby.weightG >= 1000 ? `${(baby.weightG / 1000).toFixed(2)} kg` : baby.weightG > 0 ? `${baby.weightG} g` : "a few mg"}
+                </p>
+              </div>
+            </div>
+          )}
+          <p className="muted" style={{ marginTop: 14 }}>
+            {current?.baby_development || (baby ? `This week, ${baby.development}.` : "Take it gently — these early weeks matter.")}
+          </p>
+        </div>
+
+        {/* AI extras: affirmation + premium content, or the "writing…" state */}
+        {current ? (
+          <div className="card" style={{ marginBottom: 28 }}>
+            {current.affirmation && (
+              <p style={{ fontFamily: "var(--serif)", fontStyle: "italic", fontSize: 22, color: "var(--ink-mid)", marginBottom: 18 }}>
+                “{current.affirmation}”
+              </p>
+            )}
+            {premium ? (
+              <div className="grid-2">
+                <a className="btn-pink" href={`/my-update/${current.slug}`}>Open full weekly page →</a>
+                <a className="btn-ghost" href="/chat">Ask Bumply about this week</a>
+              </div>
+            ) : (
+              <div className="pay-wall">
+                <h3 className="feat-title">🔒 Unlock your full week</h3>
+                <p className="muted" style={{ marginBottom: 16 }}>
+                  Your 7-day meal plan, partner notes and one-on-one chat with Bumply are part of premium.
+                </p>
+                <a className="btn-pink" href="/pricing">See plans</a>
+              </div>
+            )}
+          </div>
+        ) : (
+          <div style={{ marginBottom: 28 }}>
+            <WeekExtras />
+          </div>
+        )}
+
+        {/* Quick actions */}
+        {(features.journal || features.tools) && (
+          <div className="grid-2" style={{ marginBottom: 28 }}>
+            {features.journal && (
+              <a className="card" href="/journal" style={{ display: "block" }}>
+                <div style={{ fontSize: 24, marginBottom: 6 }}>📔</div>
+                <p style={{ fontFamily: "var(--serif)", fontSize: 18 }}>How are you feeling today?</p>
+                <p className="muted">Log your mood &amp; symptoms — Bumply remembers.</p>
+              </a>
+            )}
+            {features.tools && (
+              <a className="card" href="/tools" style={{ display: "block" }}>
+                <div style={{ fontSize: 24, marginBottom: 6 }}>👣</div>
+                <p style={{ fontFamily: "var(--serif)", fontSize: 18 }}>Pregnancy tools</p>
+                <p className="muted">Kick counter &amp; contraction timer for later weeks.</p>
+              </a>
+            )}
+          </div>
+        )}
+
+        {/* History */}
+        <p className="s-label">Your weeks</p>
+        <h3 className="feat-title" style={{ marginBottom: 16 }}>Every update, kept for you</h3>
+        {all.length === 0 ? (
+          <p className="muted">Your weekly pages will collect here as your journey unfolds.</p>
+        ) : (
+          <div className="grid-2">
+            {all.map((u) => (
+              <a key={u.id} className="card" href={premium ? `/my-update/${u.slug}` : "/pricing"} style={{ display: "block" }}>
+                <p className="s-label">Week {u.week_number}</p>
+                <p style={{ fontFamily: "var(--serif)", fontSize: 18, margin: "4px 0" }}>{u.subject || `Week ${u.week_number}`}</p>
+                <p className="muted">{u.baby_size}</p>
+              </a>
+            ))}
+          </div>
+        )}
+      </div>
+    </>
+  );
+}
