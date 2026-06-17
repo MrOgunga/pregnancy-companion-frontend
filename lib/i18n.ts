@@ -13,6 +13,10 @@ const STRINGS: Dict = {
   "nav.chat": { en: "Chat", pcm: "Chat", yo: "Ìbánisọ̀rọ̀", ha: "Hira", ig: "Nkata" },
   "nav.account": { en: "Account", pcm: "Account", yo: "Àkántì", ha: "Asusu", ig: "Akaụntụ" },
   "nav.vitals": { en: "Vitals", pcm: "Vitals", yo: "Ìlera", ha: "Lafiya", ig: "Ahụike" },
+  "nav.hospitals": { en: "Hospitals", pcm: "Hospitals", yo: "Ilé-ìwòsàn", ha: "Asibitoci", ig: "Ụlọ ọgwụ" },
+  "hospitals.title": { en: "Hospitals near you", pcm: "Hospitals near you", yo: "Ilé-ìwòsàn nítòsí rẹ", ha: "Asibitoci kusa da ke", ig: "Ụlọ ọgwụ dị gị nso" },
+  "hospitals.sub": { en: "Find nearby clinics & hospitals for antenatal care and delivery. We highlight a good option for delivery.", pcm: "Find clinics & hospitals near you for antenatal care and delivery. We go show you good place for delivery.", yo: "Wá àwọn ilé-ìwòsàn àti ilé-ìtọ́jú nítòsí fún ìtọ́jú ìlóyún àti ìbímọ. A máa ṣàfihàn ibi tó dára fún ìbímọ.", ha: "Nemo asibitoci da cibiyoyi kusa don kulawar ciki da haihuwa. Muna nuna kyakkyawan wuri don haihuwa.", ig: "Chọta ụlọ ọgwụ dị nso maka nlekọta afọ ime na ọmụmụ nwa. Anyị na-egosi ebe dị mma maka ọmụmụ." },
+  "dash.hospitalsDesc": { en: "Find clinics & hospitals near you, with directions.", pcm: "Find clinics & hospitals near you, with directions.", yo: "Wá àwọn ilé-ìwòsàn nítòsí rẹ, pẹ̀lú ìtọ́sọ́nà.", ha: "Nemo asibitoci kusa da ke, da kwatance.", ig: "Chọta ụlọ ọgwụ dị gị nso, ya na nduzi." },
   "nav.signout": { en: "Sign out", pcm: "Comot", yo: "Jáde", ha: "Fita", ig: "Pụọ" },
 
   // Dashboard

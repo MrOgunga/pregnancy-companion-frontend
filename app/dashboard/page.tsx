@@ -159,6 +159,11 @@ export default async function Dashboard() {
               <p style={{ fontFamily: "var(--serif)", fontSize: 18 }}>{t("nav.vitals", L)}</p>
               <p className="muted">{t("dash.vitalsDesc", L)}</p>
             </a>
+            <a className="card" href="/hospitals" style={{ display: "block" }}>
+              <div style={{ fontSize: 24, marginBottom: 6 }}>🏥</div>
+              <p style={{ fontFamily: "var(--serif)", fontSize: 18 }}>{t("nav.hospitals", L)}</p>
+              <p className="muted">{t("dash.hospitalsDesc", L)}</p>
+            </a>
           </div>
         )}
 
