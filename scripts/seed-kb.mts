@@ -9,6 +9,7 @@ for (const line of env.split("\n")) {
 }
 
 const { ensureKb, clearKb, ingest, kbCount } = await import("../lib/rag.ts");
+const { meiliConfigured, meiliConfigure, meiliIndexDocs } = await import("../lib/meili.ts");
 
 const KB: { title: string; source: string; content: string }[] = [
   { title: "Folic acid", source: "WHO", content: "Take folic acid (400–600 mcg) every day, ideally from before pregnancy through the first 12 weeks. It greatly lowers the risk of neural-tube defects like spina bifida in the baby's spine and brain." },
@@ -41,5 +42,14 @@ const KB: { title: string; source: string; content: string }[] = [
 await ensureKb();
 await clearKb();
 const n = await ingest(KB);
-console.log(`✓ Ingested ${n} chunks. KB now has ${await kbCount()} rows.`);
+console.log(`✓ pgvector: ingested ${n} chunks. KB now has ${await kbCount()} rows.`);
+
+if (meiliConfigured()) {
+  await meiliConfigure();
+  const docs = KB.map((k, i) => ({ id: `kb-${i}`, title: k.title, source: k.source, content: k.content }));
+  const ok = await meiliIndexDocs(docs);
+  console.log(ok ? `✓ Meilisearch: indexed ${docs.length} docs.` : "✗ Meilisearch indexing failed.");
+} else {
+  console.log("· Meilisearch not configured — skipped.");
+}
 process.exit(0);

@@ -1,5 +1,6 @@
 import { sql } from "./db";
 import { embed, embedOne, embeddingsConfigured, EMBED_DIM } from "./embeddings";
+import { meiliSearch } from "./meili";
 
 // Format a JS number[] as a pgvector literal.
 function vec(nums: number[]): string {
@@ -30,12 +31,23 @@ export async function retrieve(query: string, k = 4): Promise<KbHit[]> {
     limit ${k}`;
 }
 
-// Retrieval as a ready-to-inject grounding block (only keeps reasonably-close hits).
+// Hybrid retrieval as a ready-to-inject grounding block: semantic (pgvector) +
+// keyword (Meilisearch), merged and de-duplicated. Either source can be empty.
 export async function groundingBlock(query: string, k = 4): Promise<string> {
   try {
-    const hits = (await retrieve(query, k)).filter((h) => h.distance < 0.65);
-    if (hits.length === 0) return "";
-    return hits.map((h) => `- ${h.content}${h.source ? ` (${h.source})` : ""}`).join("\n");
+    const [vec, kw] = await Promise.all([
+      retrieve(query, k).then((h) => h.filter((x) => x.distance < 0.65)).catch(() => []),
+      meiliSearch(query, 3).catch(() => []),
+    ]);
+    const seen = new Set<string>();
+    const lines: string[] = [];
+    for (const h of [...vec, ...kw]) {
+      const key = h.content.slice(0, 40).toLowerCase();
+      if (seen.has(key)) continue;
+      seen.add(key);
+      lines.push(`- ${h.content}${h.source ? ` (${h.source})` : ""}`);
+    }
+    return lines.slice(0, 5).join("\n");
   } catch {
     return "";
   }
