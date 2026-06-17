@@ -2,6 +2,8 @@
 // Outbound sending + instance lifecycle (create / QR connect / state / logout) + webhook config.
 // All config via env; every call is a no-op-safe { ok, error } result so callers never throw.
 
+import { publicBaseUrl } from "./baseUrl";
+
 const BASE = (process.env.EVOLUTION_API_URL || "").replace(/\/+$/, "");
 const KEY = process.env.EVOLUTION_API_KEY || "";
 export const EVOLUTION_INSTANCE = process.env.EVOLUTION_INSTANCE || "bumply";
@@ -17,7 +19,7 @@ export function webhookSecret(): string {
 }
 
 export function webhookUrl(): string {
-  const base = (process.env.PUBLIC_WEBHOOK_URL || process.env.APP_URL || "").replace(/\/+$/, "");
+  const base = publicBaseUrl();
   const s = webhookSecret();
   return `${base}/api/whatsapp/webhook${s ? `?secret=${encodeURIComponent(s)}` : ""}`;
 }

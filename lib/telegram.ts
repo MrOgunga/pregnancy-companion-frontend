@@ -1,4 +1,6 @@
 // Telegram Bot API client — reliable two-way chat (no QR / no soft-bans).
+import { publicBaseUrl } from "./baseUrl";
+
 const TOKEN = (process.env.TELEGRAM_BOT_TOKEN || "").trim();
 const API = `https://api.telegram.org/bot${TOKEN}`;
 
@@ -15,8 +17,7 @@ export function telegramSecret(): string {
 }
 
 export function telegramWebhookUrl(): string {
-  const base = (process.env.PUBLIC_WEBHOOK_URL || process.env.APP_URL || "").replace(/\/+$/, "");
-  return `${base}/api/telegram/webhook`;
+  return `${publicBaseUrl()}/api/telegram/webhook`;
 }
 
 async function tg(method: string, body: Record<string, unknown>): Promise<Record<string, unknown>> {

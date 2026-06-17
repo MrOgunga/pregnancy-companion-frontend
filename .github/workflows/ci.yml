@@ -1,0 +1,23 @@
+name: CI
+
+on:
+  push:
+    branches: [main, dev-shinzii]
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Build (type-check + compile)
+        run: npm run build
+        env:
+          # The build doesn't connect anywhere; dummy values satisfy import-time env reads.
+          SUPABASE_DB_URL: postgres://user:pass@localhost:5432/db
+          AUTH_SECRET: ci-placeholder-secret
