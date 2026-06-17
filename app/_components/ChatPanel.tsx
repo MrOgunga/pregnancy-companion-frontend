@@ -20,11 +20,67 @@ export default function ChatPanel({
   const [msgs, setMsgs] = useState<Msg[]>(initial);
   const [input, setInput] = useState("");
   const [busy, setBusy] = useState(false);
+  const [recording, setRecording] = useState(false);
+  const [transcribing, setTranscribing] = useState(false);
+  const [voiceMsg, setVoiceMsg] = useState<number | null>(null);
   const boxRef = useRef<HTMLDivElement>(null);
+  const recRef = useRef<MediaRecorder | null>(null);
+  const chunksRef = useRef<Blob[]>([]);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
 
   useEffect(() => {
     if (boxRef.current) boxRef.current.scrollTop = boxRef.current.scrollHeight;
   }, [msgs, busy]);
+
+  // Hold-to-talk: record → transcribe (Whisper) → drop into the input for review.
+  async function toggleMic() {
+    if (recording) { recRef.current?.stop(); return; }
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      const rec = new MediaRecorder(stream);
+      chunksRef.current = [];
+      rec.ondataavailable = (e) => { if (e.data.size) chunksRef.current.push(e.data); };
+      rec.onstop = async () => {
+        stream.getTracks().forEach((tr) => tr.stop());
+        setRecording(false);
+        const blob = new Blob(chunksRef.current, { type: rec.mimeType || "audio/webm" });
+        if (blob.size < 800) return;
+        setTranscribing(true);
+        try {
+          const form = new FormData();
+          form.append("file", blob, "clip.webm");
+          const res = await fetch("/api/asr", { method: "POST", body: form });
+          const data = await res.json().catch(() => ({}));
+          if (data.text) setInput((cur) => (cur ? cur + " " : "") + data.text);
+        } catch { /* ignore */ }
+        setTranscribing(false);
+      };
+      recRef.current = rec;
+      rec.start();
+      setRecording(true);
+    } catch { /* mic denied/unavailable */ }
+  }
+
+  // Read a reply aloud in her language (SoroTTS).
+  async function playMsg(i: number, text: string) {
+    setVoiceMsg(i);
+    try {
+      const res = await fetch("/api/tts", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text, voice: L }),
+      });
+      if (res.ok) {
+        const url = URL.createObjectURL(await res.blob());
+        audioRef.current?.pause();
+        const audio = new Audio(url);
+        audioRef.current = audio;
+        audio.onended = () => URL.revokeObjectURL(url);
+        await audio.play();
+      }
+    } catch { /* ignore */ }
+    setVoiceMsg(null);
+  }
 
   async function send(text?: string) {
     const content = (text ?? input).trim();
@@ -69,6 +125,16 @@ export default function ChatPanel({
         {msgs.map((m, i) => (
           <div key={i} className={"np-msg " + (m.role === "user" ? "user" : "bumply")} style={{ maxWidth: "80%" }}>
             {m.content || "…"}
+            {m.role === "assistant" && m.content && (
+              <button
+                onClick={() => playMsg(i, m.content)}
+                title="Listen"
+                disabled={voiceMsg !== null}
+                style={{ marginLeft: 8, background: "none", border: "none", cursor: "pointer", fontSize: 13, opacity: 0.7 }}
+              >
+                {voiceMsg === i ? "⏳" : "🔊"}
+              </button>
+            )}
           </div>
         ))}
         {busy && msgs[msgs.length - 1]?.role === "user" && (
@@ -87,9 +153,19 @@ export default function ChatPanel({
       )}
 
       <div className="np-input-area">
+        <button
+          className="np-send"
+          onClick={toggleMic}
+          aria-label="Speak"
+          title={recording ? "Stop" : "Speak"}
+          disabled={transcribing}
+          style={recording ? { background: "var(--pink)", color: "#fff" } : undefined}
+        >
+          {transcribing ? "⏳" : recording ? "■" : "🎤"}
+        </button>
         <input
           className="np-input"
-          placeholder={`${t("chat.placeholder", L)}, ${name}…`}
+          placeholder={transcribing ? "Transcribing…" : `${t("chat.placeholder", L)}, ${name}…`}
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && send()}

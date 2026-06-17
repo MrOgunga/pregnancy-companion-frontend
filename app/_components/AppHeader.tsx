@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect } from "react";
 import { normalizeLang } from "@/lib/languages";
 import { t } from "@/lib/i18n";
 import LanguageSwitcher from "./LanguageSwitcher";
@@ -18,6 +19,16 @@ export default function AppHeader({
   lang?: string | null;
 }) {
   const L = normalizeLang(lang);
+
+  // Pre-warm the voice models once per session when the app opens (they scale to
+  // zero after ~5 min idle, so this makes the first voice use fast).
+  useEffect(() => {
+    try {
+      if (sessionStorage.getItem("bumply_warmed")) return;
+      sessionStorage.setItem("bumply_warmed", "1");
+    } catch { /* ignore */ }
+    fetch("/api/voice/warm", { method: "POST" }).catch(() => {});
+  }, []);
 
   async function logout() {
     await fetch("/api/auth/logout", { method: "POST" });
