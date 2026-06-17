@@ -168,6 +168,74 @@ export async function markNotified(motherId: string, kind: string, ref: string) 
   await sql`insert into notification_log (mother_id, kind, ref) values (${motherId}, ${kind}, ${ref}) on conflict do nothing`;
 }
 
+// --- Vitals ---
+export type Vital = {
+  id: string; mother_id: string; kind: string;
+  value: number | null; value2: number | null; unit: string | null;
+  note: string | null; source: string; week_number: number | null; created_at: string;
+};
+
+export async function addVital(
+  motherId: string,
+  v: { kind: string; value?: number | null; value2?: number | null; unit?: string; note?: string; source?: string; week?: number }
+): Promise<Vital> {
+  const rows = await sql<Vital[]>`
+    insert into vitals (mother_id, kind, value, value2, unit, note, source, week_number)
+    values (${motherId}, ${v.kind}, ${v.value ?? null}, ${v.value2 ?? null}, ${v.unit ?? null},
+            ${v.note ?? null}, ${v.source ?? "self"}, ${v.week ?? null})
+    returning *`;
+  return rows[0];
+}
+
+export async function listVitals(motherId: string, kind?: string, limit = 60): Promise<Vital[]> {
+  if (kind)
+    return sql<Vital[]>`select * from vitals where mother_id = ${motherId} and kind = ${kind} order by created_at desc limit ${limit}`;
+  return sql<Vital[]>`select * from vitals where mother_id = ${motherId} order by created_at desc limit ${limit}`;
+}
+
+export async function latestVital(motherId: string, kind: string): Promise<Vital | null> {
+  const rows = await sql<Vital[]>`select * from vitals where mother_id = ${motherId} and kind = ${kind} order by created_at desc limit 1`;
+  return rows[0] ?? null;
+}
+
+// --- Alerts ---
+export type Alert = {
+  id: string; mother_id: string; level: string; kind: string; message: string;
+  vital_id: string | null; status: string; reviewed_by: string | null; created_at: string;
+};
+export type AlertWithMother = Alert & { full_name: string; email: string; phone: string | null; whatsapp_number: string | null };
+
+export async function createAlert(
+  motherId: string,
+  a: { level: string; kind: string; message: string; vitalId?: string }
+): Promise<Alert> {
+  const rows = await sql<Alert[]>`
+    insert into alerts (mother_id, level, kind, message, vital_id)
+    values (${motherId}, ${a.level}, ${a.kind}, ${a.message}, ${a.vitalId ?? null})
+    returning *`;
+  return rows[0];
+}
+
+export async function listAlertsForMother(motherId: string, limit = 20): Promise<Alert[]> {
+  return sql<Alert[]>`select * from alerts where mother_id = ${motherId} order by created_at desc limit ${limit}`;
+}
+
+export async function listAlerts(status?: string, limit = 100): Promise<AlertWithMother[]> {
+  if (status)
+    return sql<AlertWithMother[]>`
+      select a.*, m.full_name, m.email, m.phone, m.whatsapp_number
+      from alerts a join mothers m on m.id = a.mother_id
+      where a.status = ${status} order by a.created_at desc limit ${limit}`;
+  return sql<AlertWithMother[]>`
+    select a.*, m.full_name, m.email, m.phone, m.whatsapp_number
+    from alerts a join mothers m on m.id = a.mother_id
+    order by a.created_at desc limit ${limit}`;
+}
+
+export async function setAlertStatus(id: string, status: string, reviewedBy: string) {
+  await sql`update alerts set status = ${status}, reviewed_by = ${reviewedBy} where id = ${id}`;
+}
+
 export async function setUpdateSent(updateId: string, channel: "email" | "whatsapp") {
   if (channel === "email") await sql`update weekly_updates set sent_email = true where id = ${updateId}`;
   else await sql`update weekly_updates set sent_whatsapp = true where id = ${updateId}`;

@@ -12,6 +12,7 @@ const STRINGS: Dict = {
   "nav.tools": { en: "Tools", pcm: "Tools", yo: "Irinṣẹ́", ha: "Kayan Aiki", ig: "Ngwa" },
   "nav.chat": { en: "Chat", pcm: "Chat", yo: "Ìbánisọ̀rọ̀", ha: "Hira", ig: "Nkata" },
   "nav.account": { en: "Account", pcm: "Account", yo: "Àkántì", ha: "Asusu", ig: "Akaụntụ" },
+  "nav.vitals": { en: "Vitals", pcm: "Vitals", yo: "Ìlera", ha: "Lafiya", ig: "Ahụike" },
   "nav.signout": { en: "Sign out", pcm: "Comot", yo: "Jáde", ha: "Fita", ig: "Pụọ" },
 
   // Dashboard
@@ -55,6 +56,7 @@ const STRINGS: Dict = {
   "dash.feelingDesc": { en: "Log your mood & symptoms — Bumply remembers.", pcm: "Log your mood & symptoms — Bumply go remember.", yo: "Ṣàkọsílẹ̀ ìmọ̀lára àti àmì àrùn rẹ — Bumply rántí.", ha: "Yi rikodin yanayinki da alamomi — Bumply yana tunawa.", ig: "Dee mmetụta na mgbaàmà gị — Bumply na-echeta." },
   "dash.apptDesc": { en: "Your antenatal visits, scans & tests — with reminders.", pcm: "Your antenatal visits, scans & tests — with reminders.", yo: "Ìbẹ̀wò ìlóyún, àyẹ̀wò àti ìdánwò rẹ — pẹ̀lú ìránnilétí.", ha: "Ziyarce-ziyarcen asibiti, duba da gwaje-gwaje — da tunatarwa.", ig: "Nleta ụlọ ọgwụ, nyocha na ule gị — na ncheta." },
   "dash.appointments": { en: "Appointments", pcm: "Appointments", yo: "Àwọn Ìpàdé", ha: "Alƙawura", ig: "Oge Nzukọ" },
+  "dash.vitalsDesc": { en: "Track BP, weight & more — Bumply flags red flags.", pcm: "Track BP, weight & more — Bumply go flag red flags.", yo: "Ṣàmójútó ẹ̀jẹ̀, ìwúwo àti bẹ́ẹ̀ bẹ́ẹ̀ lọ — Bumply máa kìlọ̀.", ha: "Bibiyar hawan jini, nauyi da ƙari — Bumply yana gargaɗi.", ig: "Soro BP, ịdị arọ na ndị ọzọ — Bumply na-adọ aka ná ntị." },
 
   // Landing / home page
   "home.nav.how": { en: "How It Works", pcm: "How E Dey Work", yo: "Bí Ó Ṣe Ń Ṣiṣẹ́", ha: "Yadda Yake Aiki", ig: "Ka Ọ Si Arụ Ọrụ" },

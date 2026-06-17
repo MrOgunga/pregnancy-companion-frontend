@@ -111,3 +111,33 @@ create table if not exists preg_companion.notification_log (
   created_at timestamptz not null default now(),
   unique (mother_id, kind, ref)
 );
+
+-- Vitals (self-logged or entered by a clinician)
+create table if not exists preg_companion.vitals (
+  id          uuid primary key default gen_random_uuid(),
+  mother_id   uuid not null references preg_companion.mothers(id) on delete cascade,
+  kind        text not null,   -- 'bp' | 'weight' | 'temp' | 'fhr' | 'glucose'
+  value       numeric,         -- primary (systolic for bp)
+  value2      numeric,         -- secondary (diastolic for bp)
+  unit        text,
+  note        text,
+  source      text not null default 'self',   -- 'self' | 'clinician'
+  week_number int,
+  created_at  timestamptz not null default now()
+);
+create index if not exists idx_vitals_mother on preg_companion.vitals(mother_id, created_at desc);
+
+-- Red-flag alerts raised from vitals (clinician portal reads these)
+create table if not exists preg_companion.alerts (
+  id          uuid primary key default gen_random_uuid(),
+  mother_id   uuid not null references preg_companion.mothers(id) on delete cascade,
+  level       text not null,   -- 'info' | 'warning' | 'urgent'
+  kind        text not null,   -- 'bp' | 'fever' | 'fhr' | 'glucose' | 'weight'
+  message     text not null,
+  vital_id    uuid references preg_companion.vitals(id) on delete set null,
+  status      text not null default 'open',   -- 'open' | 'reviewed' | 'resolved'
+  reviewed_by text,
+  created_at  timestamptz not null default now()
+);
+create index if not exists idx_alerts_status on preg_companion.alerts(status, created_at desc);
+create index if not exists idx_alerts_mother on preg_companion.alerts(mother_id, created_at desc);

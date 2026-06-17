@@ -42,6 +42,7 @@ export default function AppHeader({
           {features.journal && link("/journal", t("nav.journal", L), "journal")}
           {features.tools && link("/tools", t("nav.tools", L), "tools")}
           {features.chat && link("/chat", t("nav.chat", L), "chat")}
+          {link("/vitals", t("nav.vitals", L), "vitals")}
           {link("/account", t("nav.account", L), "account")}
           <span className={"badge " + (plan === "premium" ? "badge-premium" : "badge-free")}>{plan}</span>
           <LanguageSwitcher lang={L} compact />

@@ -10,6 +10,7 @@ import { ancAtWeek } from "./anc";
 import { milestoneAtWeek, type Milestone } from "./milestones";
 import { dailyTipFor } from "./dailyTips";
 import { sendEmail, emailConfigured } from "./email";
+import { sendWhatsApp, whatsappConfigured } from "./whatsapp";
 
 function firstName(m: Mother): string {
   return (m.full_name || "mama").split(" ")[0];
@@ -38,6 +39,28 @@ function milestoneEmailHtml(mother: Mother, ms: Milestone): string {
     </div>
     <p style="text-align:center;color:#9A8576;font-size:12px;margin-top:18px">With love, Bumply 🌸</p>
   </div></body></html>`;
+}
+
+// Fan a health alert out to every channel the mother has (push + email + WhatsApp).
+export async function sendAlert(mother: Mother, alert: { level: string; message: string }): Promise<void> {
+  const urgent = alert.level === "urgent";
+  const title = urgent ? "🚨 Bumply health alert" : "⚠️ Bumply health check";
+  await sendPushToMother(mother.id, { title, body: alert.message, url: "/vitals", tag: "alert" }).catch(() => {});
+  if (emailConfigured()) {
+    const html = `<!DOCTYPE html><html><body style="margin:0;background:#FBF7F1;font-family:'DM Sans',system-ui,Arial,sans-serif;color:#2E2620;line-height:1.7">
+      <div style="max-width:520px;margin:0 auto;padding:32px 20px">
+        <div style="background:${urgent ? "#FBE3DC" : "#FBF1DC"};border:1px solid ${urgent ? "#C97B5A" : "#E8B96F"};border-radius:20px;padding:28px;text-align:center">
+          <h1 style="font-family:Georgia,serif;font-weight:400;font-size:24px;margin:0 0 10px">${title}</h1>
+          <p style="margin:0;color:#5B4A3E">${firstName(mother)}, ${alert.message}</p>
+        </div>
+        <p style="text-align:center;color:#9A8576;font-size:12px;margin-top:18px">This is information, not a diagnosis. With love, Bumply 🌸</p>
+      </div></body></html>`;
+    await sendEmail(mother.email, title, html).catch(() => {});
+  }
+  const phone = mother.whatsapp_number || mother.phone;
+  if (whatsappConfigured() && phone) {
+    await sendWhatsApp(phone, `${title}\n\n${firstName(mother)}, ${alert.message}`).catch(() => {});
+  }
 }
 
 /** Days since epoch — used to rotate the daily tip deterministically per date. */
