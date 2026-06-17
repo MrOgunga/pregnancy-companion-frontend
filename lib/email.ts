@@ -1,14 +1,20 @@
 import { Resend } from "resend";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
+import { gmailConfigured, sendViaGmail } from "./gmail";
 
-export function emailConfigured(): boolean {
+function resendConfigured(): boolean {
   return !!process.env.RESEND_API_KEY;
+}
+
+// Email is "configured" if either provider is set up.
+export function emailConfigured(): boolean {
+  return gmailConfigured() || resendConfigured();
 }
 
 let client: Resend | null = null;
 function getClient(): Resend | null {
-  if (!emailConfigured()) return null;
+  if (!resendConfigured()) return null;
   if (!client) client = new Resend(process.env.RESEND_API_KEY!);
   return client;
 }
@@ -21,6 +27,8 @@ export async function sendEmail(
   html: string,
   attachments?: EmailAttachment[]
 ): Promise<{ sent: boolean; skipped?: boolean; error?: string; id?: string }> {
+  // Prefer Gmail when configured, otherwise fall back to Resend.
+  if (gmailConfigured()) return sendViaGmail(to, subject, html, attachments);
   const c = getClient();
   if (!c) return { sent: false, skipped: true };
   try {

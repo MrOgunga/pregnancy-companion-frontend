@@ -43,7 +43,7 @@ export default async function JournalPage() {
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                   <span style={{ fontSize: 22 }}>
                     {e.mood ? MOOD_EMOJI[e.mood] || "🌸" : "🌸"}{" "}
-                    <span className="muted" style={{ fontSize: 13 }}>{e.entry_date}{e.week_number ? ` · ${t("dash.week", L)} ${e.week_number}` : ""}</span>
+                    <span className="muted" style={{ fontSize: 13 }}>{new Date(e.entry_date).toISOString().slice(0, 10)}{e.week_number ? ` · ${t("dash.week", L)} ${e.week_number}` : ""}</span>
                   </span>
                 </div>
                 {e.symptoms && e.symptoms.length > 0 && (

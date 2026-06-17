@@ -39,7 +39,7 @@ export default async function Account() {
           {row(t("account.partner", L), mother.partner_name || "")}
           {row(t("account.phone", L), mother.whatsapp_number || mother.phone || "")}
           {row(t("account.curweek", L), `${t("dash.week", L)} ${mother.current_week} · ${mother.trimester} ${t("dash.trimester", L)}`)}
-          {row(t("account.duedate", L), mother.due_date || "")}
+          {row(t("account.duedate", L), mother.due_date ? new Date(mother.due_date).toISOString().slice(0, 10) : "")}
           {row(t("account.firstpreg", L), mother.first_pregnancy ? t("common.yes", L) : t("common.no", L))}
           {row(t("account.dietary", L), mother.dietary_restrictions || t("common.none", L))}
         </div>
