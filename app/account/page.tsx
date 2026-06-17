@@ -4,8 +4,10 @@ import { getMotherById } from "@/lib/queries";
 import { getSettings } from "@/lib/settings";
 import { normalizeLang } from "@/lib/languages";
 import { t } from "@/lib/i18n";
+import { getPrefs } from "@/lib/personalize";
 import AppHeader from "../_components/AppHeader";
 import SubscribeButton from "../_components/SubscribeButton";
+import PreferencesForm from "../_components/PreferencesForm";
 
 export const dynamic = "force-dynamic";
 
@@ -59,6 +61,8 @@ export default async function Account() {
             <SubscribeButton plan="premium" label={t("account.upgrade", L)} href="/account" />
           )}
         </div>
+
+        <PreferencesForm prefs={getPrefs(mother)} lang={mother.language} />
       </div>
     </>
   );

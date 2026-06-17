@@ -5,6 +5,7 @@ import { getMotherById, getWeeklyUpdateByWeek, recentChat, saveChat, recentJourn
 import { currentWeekFrom, trimesterFor } from "@/lib/babyData";
 import { languageInstruction } from "@/lib/languages";
 import { groundingBlock } from "@/lib/rag";
+import { preferencesBlock, toneMaxTokens } from "@/lib/personalize";
 
 function textResponse(body: string, status = 200) {
   return new Response(body, { status, headers: { "Content-Type": "text/plain; charset=utf-8", "Cache-Control": "no-store" } });
@@ -46,7 +47,7 @@ You are speaking with ${mother.full_name}, currently in week ${week} (${trimeste
 Be warm, brief and reassuring. Use her name occasionally. Give practical, trimester-appropriate guidance.
 BE CONCISE: reply in 2–4 short sentences, plain everyday words, no preamble or filler. Use at most a couple of short bullet points only if it genuinely helps.
 You are NOT a doctor: for any warning signs (heavy bleeding, severe or persistent pain, reduced fetal movement, fever, vision changes, severe swelling), gently and clearly urge her to contact her healthcare provider or go to a clinic. Never diagnose or prescribe.
-${languageInstruction(mother.language || "en")}`;
+${languageInstruction(mother.language || "en")}${preferencesBlock(mother)}`;
 
   const history = await recentChat(mother.id, 16);
 
@@ -56,7 +57,7 @@ ${languageInstruction(mother.language || "en")}`;
     stream = await ai.chat.completions.create({
       model,
       temperature: 0.7,
-      max_tokens: 600,
+      max_tokens: toneMaxTokens(mother, 600),
       stream: true,
       messages: [
         { role: "system", content: system },

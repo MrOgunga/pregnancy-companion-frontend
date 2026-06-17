@@ -91,6 +91,9 @@ create table if not exists preg_companion.app_settings (
 -- Language preference (en | pcm | yo | ha | ig). Added post-launch, idempotent.
 alter table preg_companion.mothers add column if not exists language text not null default 'en';
 
+-- User customization: { tone, focus[], about } — personalises the AI.
+alter table preg_companion.mothers add column if not exists preferences jsonb not null default '{}'::jsonb;
+
 -- Web-push subscriptions (one row per device/browser)
 create table if not exists preg_companion.push_subscriptions (
   id         uuid primary key default gen_random_uuid(),

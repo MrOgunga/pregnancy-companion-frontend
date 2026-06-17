@@ -7,6 +7,7 @@ import { randomBytes } from "node:crypto";
 import { trimesterFor, getBabyData, babySizeText } from "./babyData";
 import { babyImageFor } from "./babyImages";
 import { languageInstruction } from "./languages";
+import { preferencesBlock } from "./personalize";
 
 export { trimesterFor };
 
@@ -47,6 +48,7 @@ Mother profile:
 - Trimester: ${trimesterFor(week)}
 - First pregnancy: ${mother.first_pregnancy ? "yes" : "no"}
 - Dietary restrictions: ${mother.dietary_restrictions || "none"}
+${preferencesBlock(mother)}
 
 ${facts}
 

@@ -59,6 +59,11 @@ const dashYo = await (await req(mom, "GET", "/dashboard")).text();
 ok("dashboard renders Yoruba", /Báwo|Ọmọ rẹ|Ilé/.test(dashYo));
 await req(mom, "POST", "/api/lang", { json: { language: "en" } });
 
+console.log("\n— User customization (preferences) —");
+ok("save preferences", (await req(mom, "POST", "/api/account/preferences", { json: { tone: "concise", focus: ["Nutrition & meals"], about: "I am a nurse expecting twins" } })).status === 200);
+const acct = await (await req(mom, "GET", "/account")).text();
+ok("account shows saved 'about'", acct.includes("I am a nurse expecting twins"));
+
 console.log("\n— Core pages 200 —");
 for (const p of ["/journal", "/tools", "/vitals", "/hospitals", "/library", "/appointments", "/account", "/chat"]) {
   ok(`GET ${p}`, (await req(mom, "GET", p)).status === 200);

@@ -17,6 +17,7 @@ export type Mother = {
   source: string | null;
   plan: "free" | "premium";
   language: string | null;
+  preferences: Record<string, unknown> | null;
   last_sent_at: string | null;
   created_at: string;
 };
@@ -97,6 +98,10 @@ export async function createMother(m: {
 
 export async function updateMotherLanguage(id: string, language: string) {
   await sql`update mothers set language = ${language} where id = ${id}`;
+}
+
+export async function updateMotherPreferences(id: string, prefs: Record<string, unknown>) {
+  await sql`update mothers set preferences = ${sql.json(prefs as Parameters<typeof sql.json>[0])} where id = ${id}`;
 }
 
 export async function setPlan(id: string, plan: "free" | "premium") {

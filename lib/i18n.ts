@@ -50,6 +50,16 @@ const STRINGS: Dict = {
     ig: "Bumply ga-akpọrọ gị ma deere gị n'asụsụ a.",
   },
   "common.save": { en: "Save", pcm: "Save", yo: "Fipamọ́", ha: "Ajiye", ig: "Chekwaa" },
+  "account.personalise": { en: "Personalise Bumply", pcm: "Personalise Bumply", yo: "Ṣe Bumply ní tìrẹ", ha: "Keɓanta Bumply", ig: "Hazie Bumply" },
+  "account.personaliseSub": { en: "Tell Bumply how to talk to you and what matters most — your chats and weekly notes adapt.", pcm: "Tell Bumply how to talk to you and wetin matter most — your chats and weekly notes go adapt.", yo: "Sọ fún Bumply bí ó ṣe lè bá ọ sọ̀rọ̀ àti ohun tó ṣe pàtàkì jùlọ — ìbánisọ̀rọ̀ àti àkọsílẹ̀ ọ̀sọ̀ọ̀sẹ̀ rẹ yóò bá a mu.", ha: "Gaya wa Bumply yadda zai yi maki magana da abin da ya fi muhimmanci — hirarki da bayanan mako za su dace.", ig: "Gwa Bumply ka ọ ga-esi gwa gị okwu na ihe kacha mkpa — nkata gị na ndetu izu ga-adaba." },
+  "account.tone": { en: "How should Bumply talk?", pcm: "How Bumply go talk?", yo: "Báwo ni Bumply ṣe yẹ kó sọ̀rọ̀?", ha: "Yaya Bumply zai yi magana?", ig: "Kedu ka Bumply ga-esi kwuo okwu?" },
+  "tone.warm": { en: "Warm & friendly", pcm: "Warm & friendly", yo: "Ọ̀rẹ́ àti ìfẹ́", ha: "Mai dumi & abokantaka", ig: "Ọkụ & enyi" },
+  "tone.concise": { en: "Short & to the point", pcm: "Short & straight", yo: "Kúkúrú àti tààrà", ha: "Gajere & kai tsaye", ig: "Mkpirikpi & kpọmkwem" },
+  "tone.detailed": { en: "Detailed", pcm: "Plenty detail", yo: "Kíkún", ha: "Cikakke", ig: "Zuru ezu" },
+  "account.focus": { en: "What matters most to you?", pcm: "Wetin matter most to you?", yo: "Kí ni ó ṣe pàtàkì jùlọ sí ọ?", ha: "Me ya fi muhimmanci a gare ki?", ig: "Gịnị kacha mkpa nye gị?" },
+  "account.about": { en: "Anything Bumply should know about you?", pcm: "Anything Bumply suppose know about you?", yo: "Ǹjẹ́ ohunkóhun tí Bumply yẹ kó mọ̀ nípa rẹ?", ha: "Akwai abin da Bumply ya kamata ya sani game da ke?", ig: "Enwere ihe Bumply kwesịrị ịmara gbasara gị?" },
+  "account.aboutPlaceholder": { en: "e.g. I'm a nurse · expecting twins · vegetarian · first baby after a loss", pcm: "e.g. I be nurse · I dey expect twins · I no dey chop meat · first baby after loss", yo: "f.a. nọ́ọ̀sì ni mí · ìbéjì ni · kì í jẹ ẹran · ọmọ àkọ́kọ́ lẹ́yìn àdánù", ha: "misali, ni ma'aikaciyar lafiya ce · ina sa ran tagwaye · ba na cin nama · jariri na farko bayan asara", ig: "dịka, abụ m nọọsụ · ejìm ejima · anaghị m eri anụ · nwa mbụ mgbe ọnwụ gasịrị" },
+  "account.saved": { en: "✓ Saved — Bumply will remember.", pcm: "✓ Saved — Bumply go remember.", yo: "✓ A ti fipamọ́ — Bumply yóò rántí.", ha: "✓ An ajiye — Bumply zai tuna.", ig: "✓ Echekwala — Bumply ga-echeta." },
   "common.saved": { en: "Saved", pcm: "Saved", yo: "A ti fipamọ́", ha: "An ajiye", ig: "Echekwala" },
 
   // Dashboard — extra strings

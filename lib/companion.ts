@@ -5,6 +5,7 @@ import { getWeeklyUpdateByWeek, recentChat, saveChat, recentJournalSummary } fro
 import { currentWeekFrom, trimesterFor } from "./babyData";
 import { languageInstruction } from "./languages";
 import { groundingBlock } from "./rag";
+import { preferencesBlock } from "./personalize";
 
 // A single, non-streaming Bumply reply for WhatsApp — grounded in her week, profile,
 // recent journal and chat history. Mirrors the in-app chat persona, tuned for WhatsApp.
@@ -25,7 +26,7 @@ She is in week ${week} (${trimesterFor(week)} trimester)${mother.due_date ? `, d
   }. Dietary notes: ${mother.dietary_restrictions || "none"}. ${context}${journalBlock}${groundingBlk}
 Reply like a caring friend on WhatsApp: warm, brief (1–3 short sentences), an occasional emoji, and use her first name sometimes. Give practical, trimester-appropriate guidance. BE CONCISE — no preamble or filler, get straight to the helpful point.
 You are NOT a doctor: for any warning signs (heavy bleeding, severe or persistent pain, reduced fetal movement, fever, vision changes, severe swelling), clearly and gently urge her to contact her healthcare provider or go to a clinic. Never diagnose or prescribe.
-${languageInstruction(mother.language || "en")}`;
+${languageInstruction(mother.language || "en")}${preferencesBlock(mother)}`;
 
   const history = await recentChat(mother.id, 12);
   const model = await resolveModel(AI_MODEL);
