@@ -15,6 +15,7 @@
     "test:whatsapp": "tsx scripts/test-whatsapp.mts"
   },
   "dependencies": {
+    "@breezystack/lamejs": "^1.2.7",
     "@remotion/bundler": "^4.0.479",
     "@remotion/cli": "^4.0.479",
     "@remotion/renderer": "^4.0.479",

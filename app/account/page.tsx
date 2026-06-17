@@ -46,6 +46,7 @@ export default async function Account() {
           {row(t("account.duedate", L), mother.due_date ? new Date(mother.due_date).toISOString().slice(0, 10) : "")}
           {row(t("account.firstpreg", L), mother.first_pregnancy ? t("common.yes", L) : t("common.no", L))}
           {row(t("account.dietary", L), mother.dietary_restrictions || t("common.none", L))}
+          {row(t("account.ethnicity", L), mother.ethnicity || t("common.none", L))}
         </div>
 
         <div className="card">

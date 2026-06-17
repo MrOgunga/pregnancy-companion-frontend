@@ -15,6 +15,7 @@ export type Mother = {
   trimester: string | null;
   first_pregnancy: boolean | null;
   dietary_restrictions: string | null;
+  ethnicity: string | null;
   source: string | null;
   plan: "free" | "premium";
   language: string | null;
@@ -83,18 +84,19 @@ export async function createMother(m: {
   trimester: string;
   first_pregnancy: boolean;
   dietary_restrictions?: string;
+  ethnicity?: string;
   source?: string;
   language?: string;
 }): Promise<Mother> {
   const rows = await sql<Mother[]>`
     insert into mothers
       (email, password_hash, full_name, partner_name, phone, whatsapp_number, due_date,
-       current_week, weeks_completed, trimester, first_pregnancy, dietary_restrictions, source, language)
+       current_week, weeks_completed, trimester, first_pregnancy, dietary_restrictions, ethnicity, source, language)
     values
       (${m.email.toLowerCase()}, ${m.password_hash}, ${m.full_name}, ${m.partner_name ?? null},
        ${m.phone ?? null}, ${m.whatsapp_number ?? m.phone ?? null}, ${m.due_date ?? null},
        ${m.current_week}, ${m.weeks_completed}, ${m.trimester}, ${m.first_pregnancy},
-       ${m.dietary_restrictions ?? null}, ${m.source ?? "website"}, ${m.language ?? "en"})
+       ${m.dietary_restrictions ?? null}, ${m.ethnicity ?? null}, ${m.source ?? "website"}, ${m.language ?? "en"})
     returning *`;
   return rows[0];
 }

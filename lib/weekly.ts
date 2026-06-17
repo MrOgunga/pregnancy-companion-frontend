@@ -48,6 +48,7 @@ Mother profile:
 - Trimester: ${trimesterFor(week)}
 - First pregnancy: ${mother.first_pregnancy ? "yes" : "no"}
 - Dietary restrictions: ${mother.dietary_restrictions || "none"}
+- Ethnicity / cuisine: ${mother.ethnicity || "Nigerian (general)"}
 ${preferencesBlock(mother)}
 
 ${facts}
@@ -82,7 +83,8 @@ Rules:
 - Keep tone warm, reassuring, and personal. Address her by name.
 - If first pregnancy is "yes", make firstTimeMomTip useful. If not, return an empty string.
 - Respect the dietary restrictions in every meal.
-- Keep all JSON keys exactly as shown in English, but write every VALUE (text the mother reads) in her language. ${languageInstruction(mother.language || "en")} Use local Nigerian foods in the meal plan where natural.
+- Keep all JSON keys exactly as shown in English, but write every VALUE (text the mother reads) in her language. ${languageInstruction(mother.language || "en")}
+- CURATE THE 7-DAY MEAL PLAN around her ethnicity/cuisine (${mother.ethnicity || "Nigerian"}): use authentic, familiar, locally-available dishes from that culture (e.g. for Yoruba: amala & ewedu, ekuru; Igbo: ofe onugbu, abacha; Hausa: tuwo & miyan kuka, dambu; etc.), while keeping it nutritious for pregnancy and respecting her dietary restrictions.
 - Do not output markdown. Do not wrap JSON in backticks.`;
 }
 

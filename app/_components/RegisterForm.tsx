@@ -3,6 +3,10 @@ import { useState } from "react";
 import { LANGUAGES } from "@/lib/languages";
 
 const WEEKS = Array.from({ length: 40 }, (_, i) => i + 1);
+const ETHNICITIES = [
+  "Yoruba", "Igbo", "Hausa", "Fulani", "Ijaw", "Kanuri", "Tiv", "Ibibio / Efik",
+  "Edo", "Nupe", "Urhobo", "Other Nigerian", "Non-Nigerian", "Prefer not to say",
+];
 
 export default function RegisterForm() {
   const [form, setForm] = useState({
@@ -15,6 +19,7 @@ export default function RegisterForm() {
     current_week: "",
     first_pregnancy: "yes",
     dietary_restrictions: "",
+    ethnicity: "",
     language: "en",
   });
   const [busy, setBusy] = useState(false);
@@ -111,6 +116,15 @@ export default function RegisterForm() {
         <select value={form.first_pregnancy} onChange={(e) => set("first_pregnancy", e.target.value)}>
           <option value="yes">Yes — first time 🌸</option>
           <option value="no">No — I&apos;ve done this before</option>
+        </select>
+      </div>
+      <div className="fg">
+        <label>Ethnicity (for your meal plan)</label>
+        <select value={form.ethnicity} onChange={(e) => set("ethnicity", e.target.value)}>
+          <option value="">Select (so we curate local meals)</option>
+          {ETHNICITIES.map((e) => (
+            <option key={e} value={e}>{e}</option>
+          ))}
         </select>
       </div>
       <div className="fg">

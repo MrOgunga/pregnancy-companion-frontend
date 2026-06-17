@@ -155,6 +155,7 @@ const STRINGS: Dict = {
   "account.duedate": { en: "Due date", pcm: "Due date", yo: "Ọjọ́ ìbímọ", ha: "Ranar haihuwa", ig: "Ụbọchị ọmụmụ" },
   "account.firstpreg": { en: "First pregnancy", pcm: "First pregnancy", yo: "Oyún àkọ́kọ́", ha: "Ciki na farko", ig: "Afọ ime mbụ" },
   "account.dietary": { en: "Dietary restrictions", pcm: "Dietary restrictions", yo: "Ìfòfindè oúnjẹ", ha: "Hani na abinci", ig: "Mmachi nri" },
+  "account.ethnicity": { en: "Ethnicity", pcm: "Ethnicity", yo: "Ẹ̀yà", ha: "Ƙabila", ig: "Agbụrụ" },
   "account.plan": { en: "Plan", pcm: "Plan", yo: "Ètò", ha: "Tsari", ig: "Atụmatụ" },
   "account.youreon": { en: "You're on", pcm: "You dey on", yo: "O wà lórí", ha: "Kina kan", ig: "Ị nọ na" },
   "account.premiumDesc": { en: "Meal plans, partner notes and unlimited chat are unlocked.", pcm: "Meal plans, partner notes and unlimited chat don open.", yo: "Ètò oúnjẹ, àkọsílẹ̀ alábàákẹ́gbẹ́ àti ìbánisọ̀rọ̀ àìlópin ti ṣí.", ha: "Shirin abinci, bayanan abokin tarayya da hira mara iyaka sun buɗe.", ig: "Atụmatụ nri, ndetu di na nkata na-enweghị oke emeghere." },

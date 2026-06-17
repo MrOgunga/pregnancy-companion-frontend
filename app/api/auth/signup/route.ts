@@ -46,6 +46,7 @@ export async function POST(req: Request) {
       trimester: trimesterFor(week),
       first_pregnancy: String(b.first_pregnancy || "yes").toLowerCase() === "yes",
       dietary_restrictions: String(b.dietary_restrictions || "").trim() || undefined,
+      ethnicity: String(b.ethnicity || "").trim() || undefined,
       source: String(b.source || "website"),
       language: normalizeLang(b.language),
     });

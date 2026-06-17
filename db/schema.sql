@@ -17,6 +17,7 @@ create table if not exists preg_companion.mothers (
   trimester             text,
   first_pregnancy       boolean default true,
   dietary_restrictions  text,
+  ethnicity             text,
   source                text default 'website',
   plan                  text not null default 'free',   -- 'free' | 'premium'
   last_sent_at          timestamptz,
@@ -93,6 +94,9 @@ alter table preg_companion.mothers add column if not exists language text not nu
 
 -- User customization: { tone, focus[], about } — personalises the AI.
 alter table preg_companion.mothers add column if not exists preferences jsonb not null default '{}'::jsonb;
+
+-- Ethnicity — curates the meal plan around local/cultural cuisine.
+alter table preg_companion.mothers add column if not exists ethnicity text;
 
 -- Telegram chat link (set when a mom links her Telegram to her account).
 alter table preg_companion.mothers add column if not exists telegram_chat_id text;
