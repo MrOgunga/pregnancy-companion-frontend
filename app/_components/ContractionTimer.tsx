@@ -1,5 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
+import { normalizeLang } from "@/lib/languages";
+import { t } from "@/lib/i18n";
 
 type C = { start: number; end: number };
 const KEY = "bumply_contractions";
@@ -10,7 +12,8 @@ function fmt(sec: number) {
   return `${m}m ${String(s).padStart(2, "0")}s`;
 }
 
-export default function ContractionTimer() {
+export default function ContractionTimer({ lang }: { lang?: string | null }) {
+  const L = normalizeLang(lang);
   const [list, setList] = useState<C[]>([]);
   const [running, setRunning] = useState<number | null>(null);
   const [now, setNow] = useState(0);
@@ -55,17 +58,14 @@ export default function ContractionTimer() {
 
   return (
     <div className="card">
-      <p className="s-label">Contraction timer</p>
-      <h3 className="feat-title" style={{ marginBottom: 6 }}>Time your contractions</h3>
-      <p className="muted" style={{ marginBottom: 18 }}>
-        Near your due date, tap <strong>Start</strong> when a contraction begins and <strong>Stop</strong> when it ends.
-        The common guide is the <em>5-1-1</em> rule (5 min apart, 1 min long, for 1 hour) — but always follow your provider&apos;s advice.
-      </p>
+      <p className="s-label">{t("contraction.label", L)}</p>
+      <h3 className="feat-title" style={{ marginBottom: 6 }}>{t("contraction.title", L)}</h3>
+      <p className="muted" style={{ marginBottom: 18 }}>{t("contraction.desc", L)}</p>
 
       {running != null && (
         <div style={{ textAlign: "center", marginBottom: 14 }}>
           <div style={{ fontFamily: "var(--serif)", fontSize: 48, color: "var(--pink)" }}>{fmt(liveDur)}</div>
-          <div className="muted">contraction in progress</div>
+          <div className="muted">{t("contraction.inprogress", L)}</div>
         </div>
       )}
 
@@ -74,16 +74,16 @@ export default function ContractionTimer() {
         className={running != null ? "btn-ghost" : "btn-pink"}
         style={{ width: "100%", padding: "20px", fontSize: 16, justifyContent: "center", ...(running != null ? { border: "1px solid var(--pink)", color: "var(--pink)" } : {}) }}
       >
-        {running != null ? "Stop ⏱" : "Start contraction ⏱"}
+        {running != null ? t("contraction.stop", L) : t("contraction.start", L)}
       </button>
 
       {recent.length > 0 && (
         <table style={{ width: "100%", marginTop: 18, fontSize: 13, borderCollapse: "collapse" }}>
           <thead>
             <tr style={{ textAlign: "left", color: "var(--ink-muted)" }}>
-              <th style={{ padding: "6px 4px", fontWeight: 500 }}>Started</th>
-              <th style={{ padding: "6px 4px", fontWeight: 500 }}>Length</th>
-              <th style={{ padding: "6px 4px", fontWeight: 500 }}>Apart</th>
+              <th style={{ padding: "6px 4px", fontWeight: 500 }}>{t("contraction.started", L)}</th>
+              <th style={{ padding: "6px 4px", fontWeight: 500 }}>{t("contraction.length", L)}</th>
+              <th style={{ padding: "6px 4px", fontWeight: 500 }}>{t("contraction.apart", L)}</th>
             </tr>
           </thead>
           <tbody>
@@ -105,7 +105,7 @@ export default function ContractionTimer() {
 
       {list.length > 0 && (
         <button className="btn-ghost" style={{ marginTop: 12, fontSize: 12 }} onClick={clear}>
-          Clear log
+          {t("contraction.clear", L)}
         </button>
       )}
     </div>

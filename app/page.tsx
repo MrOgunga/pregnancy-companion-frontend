@@ -60,22 +60,22 @@ export default async function Home() {
 
           <div className="hero-right">
             <div className="float-pill fp-weight">
-              <div className="pill-label">Baby weight</div>
-              <div className="pill-val">14 grams 🌱</div>
+              <div className="pill-label">{t("home.pill.weight", L)}</div>
+              <div className="pill-val">14g 🌱</div>
             </div>
             <div className="float-pill fp-size">
-              <div className="pill-label">Size this week</div>
-              <div className="pill-val">🍋 A lime</div>
+              <div className="pill-label">{t("home.pill.size", L)}</div>
+              <div className="pill-val">🍋</div>
             </div>
             <HeroIllustration />
             <div className="float-pill fp-week">
-              <div className="pill-label">You are in</div>
+              <div className="pill-label">{t("home.pill.youarein", L)}</div>
               <div className="pill-big">12</div>
-              <div className="pill-sub">Weeks ✓</div>
+              <div className="pill-sub">{t("home.pill.weeks", L)}</div>
             </div>
             <div className="float-pill fp-sent">
-              <div className="pill-label">Weekly update</div>
-              <div className="pill-val">Sent Monday ✓</div>
+              <div className="pill-label">{t("home.pill.update", L)}</div>
+              <div className="pill-val">{t("home.pill.sent", L)}</div>
             </div>
           </div>
         </div>
@@ -93,18 +93,18 @@ export default async function Home() {
           <div className="steps-grid reveal">
             <div className="step-card">
               <div className="step-num">01</div>
-              <div className="step-title">Register your details</div>
-              <div className="step-desc">Fill in your name, due date, dietary needs and partner&apos;s name. Takes under 2 minutes.</div>
+              <div className="step-title">{t("home.step1.title", L)}</div>
+              <div className="step-desc">{t("home.step1.desc", L)}</div>
             </div>
             <div className="step-card">
               <div className="step-num">02</div>
-              <div className="step-title">Bumply calculates your week</div>
-              <div className="step-desc">The system reads your current gestational week and generates a fully personalised update just for you.</div>
+              <div className="step-title">{t("home.step2.title", L)}</div>
+              <div className="step-desc">{t("home.step2.desc", L)}</div>
             </div>
             <div className="step-card">
               <div className="step-num">03</div>
-              <div className="step-title">Your beautiful page arrives</div>
-              <div className="step-desc">Your baby&apos;s size, development, 7-day meal plan, fetal image, and a special note for your partner — all in one place.</div>
+              <div className="step-title">{t("home.step3.title", L)}</div>
+              <div className="step-desc">{t("home.step3.desc", L)}</div>
             </div>
           </div>
         </div>
@@ -121,26 +121,26 @@ export default async function Home() {
             <div className="feat-card fc-pink">
               <div className="feat-icon">👶</div>
               <div className="feat-title">{t("home.feat1.title", L)}</div>
-              <div className="feat-desc">See your baby&apos;s actual size, weight and length with a real fetal image for your stage of pregnancy — from a single cell to a fully formed little one.</div>
-              <span className="feat-tag">Visual · Medical-grade</span>
+              <div className="feat-desc">{t("home.feat1.desc", L)}</div>
+              <span className="feat-tag">{t("home.feat1.tag", L)}</span>
             </div>
             <div className="feat-card fc-lav">
               <div className="feat-icon">🥗</div>
               <div className="feat-title">{t("home.feat2.title", L)}</div>
-              <div className="feat-desc">Every meal tailored to your trimester, dietary restrictions and what your baby needs most that specific week.</div>
-              <span className="feat-tag">AI-generated · Weekly</span>
+              <div className="feat-desc">{t("home.feat2.desc", L)}</div>
+              <span className="feat-tag">{t("home.feat2.tag", L)}</span>
             </div>
             <div className="feat-card fc-blue">
               <div className="feat-icon">💌</div>
               <div className="feat-title">{t("home.feat3.title", L)}</div>
-              <div className="feat-desc">A warm, personal message sent directly to your partner — by name — on what&apos;s happening with the baby and how to support you.</div>
-              <span className="feat-tag">Personalised · Heartfelt</span>
+              <div className="feat-desc">{t("home.feat3.desc", L)}</div>
+              <span className="feat-tag">{t("home.feat3.tag", L)}</span>
             </div>
             <div className="feat-card fc-gold">
               <div className="feat-icon">🎯</div>
               <div className="feat-title">{t("home.feat4.title", L)}</div>
-              <div className="feat-desc">Special messages at week 13, 27 and 40 — your trimester completions — to celebrate how far you&apos;ve come.</div>
-              <span className="feat-tag">Automated · Celebratory</span>
+              <div className="feat-desc">{t("home.feat4.desc", L)}</div>
+              <span className="feat-tag">{t("home.feat4.tag", L)}</span>
             </div>
           </div>
         </div>
@@ -180,15 +180,15 @@ export default async function Home() {
               <div className="promise-list">
                 <div className="promise-row">
                   <div className="p-icon pink">🌸</div>
-                  <div><div className="p-name">Weekly updates, week 1 to 40</div><div className="p-desc">A new personalised page every week, kept in your dashboard.</div></div>
+                  <div><div className="p-name">{t("home.promise1.name", L)}</div><div className="p-desc">{t("home.promise1.desc", L)}</div></div>
                 </div>
                 <div className="promise-row">
                   <div className="p-icon lav">🔒</div>
-                  <div><div className="p-name">Private and secure</div><div className="p-desc">Your account, your data — never shared with anyone.</div></div>
+                  <div><div className="p-name">{t("home.promise2.name", L)}</div><div className="p-desc">{t("home.promise2.desc", L)}</div></div>
                 </div>
                 <div className="promise-row">
                   <div className="p-icon blue">💙</div>
-                  <div><div className="p-name">Free during beta</div><div className="p-desc">Premium chat &amp; meal plans unlock with a subscription.</div></div>
+                  <div><div className="p-name">{t("home.promise3.name", L)}</div><div className="p-desc">{t("home.promise3.desc", L)}</div></div>
                 </div>
               </div>
             </div>
@@ -204,22 +204,22 @@ export default async function Home() {
         <div className="wrap">
           <div className="reveal">
             <p className="s-label">{t("home.stories.label", L)}</p>
-            <h2 className="s-title">From the mamas <em>themselves</em></h2>
+            <h2 className="s-title">{t("home.stories.title", L)}</h2>
           </div>
           <div className="testi-grid reveal">
             <div className="testi-card">
               <div className="testi-stars">★★★★★</div>
-              <div className="testi-text">&quot;The meal plans alone are worth it. Every Monday feels like getting a gift. My husband loved his personalised note — he actually cried.&quot;</div>
+              <div className="testi-text">{t("home.testi1", L)}</div>
               <div className="testi-author"><div className="testi-avatar av1">👩🏾</div><div><div className="testi-name">Chiamaka O.</div><div className="testi-week">Week 28 · Lagos</div></div></div>
             </div>
             <div className="testi-card">
               <div className="testi-stars">★★★★★</div>
-              <div className="testi-text">&quot;Seeing my baby&apos;s actual photo every week makes it so real. I didn&apos;t know what a 14-week baby looked like until Bumply showed me.&quot;</div>
+              <div className="testi-text">{t("home.testi2", L)}</div>
               <div className="testi-author"><div className="testi-avatar av2">👩🏽</div><div><div className="testi-name">Fatima A.</div><div className="testi-week">Week 19 · Abuja</div></div></div>
             </div>
             <div className="testi-card">
               <div className="testi-stars">★★★★★</div>
-              <div className="testi-text">&quot;First pregnancy and I was terrified. The reassurance notes for first-time moms made me feel so seen. I genuinely look forward to Mondays.&quot;</div>
+              <div className="testi-text">{t("home.testi3", L)}</div>
               <div className="testi-author"><div className="testi-avatar av3">👩🏿</div><div><div className="testi-name">Blessing N.</div><div className="testi-week">Week 11 · Port Harcourt</div></div></div>
             </div>
           </div>
@@ -231,11 +231,11 @@ export default async function Home() {
         <div className="wrap">
           <div className="foot-grid">
             <div>
-              <div className="foot-logo">Bumply <span>Companion</span></div>
+              <div className="foot-logo">Bumply <span>{t("home.foot.companion", L)}</span></div>
               <p className="foot-desc">{t("home.foot.desc", L)}</p>
             </div>
             <div>
-              <div className="foot-col-title">Navigate</div>
+              <div className="foot-col-title">{t("home.foot.navigate", L)}</div>
               <ul className="foot-links">
                 <li><a href="#how">{t("home.nav.how", L)}</a></li>
                 <li><a href="#features">{t("home.nav.features", L)}</a></li>
@@ -244,7 +244,7 @@ export default async function Home() {
               </ul>
             </div>
             <div>
-              <div className="foot-col-title">Built by</div>
+              <div className="foot-col-title">{t("home.foot.builtby", L)}</div>
               <ul className="foot-links">
                 <li><a href="https://thebrandnerve.com" target="_blank">The Brand NERVE</a></li>
                 <li><a href="mailto:thebrandnerve@gmail.com">thebrandnerve@gmail.com</a></li>
@@ -252,7 +252,7 @@ export default async function Home() {
             </div>
           </div>
           <div className="foot-bottom">
-            <div className="foot-copy">© 2025 Bumply. Built with love for every mama.</div>
+            <div className="foot-copy">{t("home.foot.copy", L)}</div>
             <div className="foot-copy">Powered by Next.js · NVIDIA · Supabase</div>
           </div>
         </div>

@@ -3,15 +3,17 @@ import { getSession } from "@/lib/session";
 import { getMotherById, recentChat } from "@/lib/queries";
 import { currentWeekFrom, trimesterFor } from "@/lib/babyData";
 import { getSettings } from "@/lib/settings";
+import { normalizeLang } from "@/lib/languages";
+import { t } from "@/lib/i18n";
 import AppHeader from "../_components/AppHeader";
 import ChatPanel from "../_components/ChatPanel";
 
 export const dynamic = "force-dynamic";
 
-const SUGGESTIONS: Record<string, string[]> = {
-  first: ["Is it normal to feel this tired?", "What can help with nausea?", "Which symptoms should worry me?"],
-  second: ["What should I be eating now?", "When will I feel the baby kick?", "Is this back pain normal?"],
-  third: ["How will I know labour is starting?", "What should be in my hospital bag?", "How can I sleep better now?"],
+const SUGGESTION_KEYS: Record<string, string[]> = {
+  first: ["chat.s.first1", "chat.s.first2", "chat.s.first3"],
+  second: ["chat.s.second1", "chat.s.second2", "chat.s.second3"],
+  third: ["chat.s.third1", "chat.s.third2", "chat.s.third3"],
 };
 
 export default async function ChatPage() {
@@ -26,34 +28,31 @@ export default async function ChatPage() {
 
   const week = currentWeekFrom({ dueDate: mother.due_date, enteredWeek: mother.current_week, createdAt: mother.created_at });
   const trimester = trimesterFor(week);
+  const L = normalizeLang(mother.language);
+  const suggestions = SUGGESTION_KEYS[trimester].map((k) => t(k, L));
 
   return (
     <>
       <AppHeader plan={mother.plan} lang={mother.language} active="chat" features={features} />
       <div className="app-shell">
-        <p className="s-label">Talk to Bumply</p>
-        <h1 className="s-title" style={{ marginBottom: 16 }}>
-          Your <em>companion</em>, any time
-        </h1>
+        <p className="s-label">{t("chat.talkto", L)}</p>
+        <h1 className="s-title" style={{ marginBottom: 16 }}>{t("chat.companionAny", L)}</h1>
 
         {mother.plan === "premium" ? (
           <>
             <ChatPanel
               name={mother.full_name}
-              suggestions={SUGGESTIONS[trimester]}
+              lang={mother.language}
+              suggestions={suggestions}
               initial={await loadInitial(mother.id, mother.full_name, week)}
             />
-            <p className="muted" style={{ textAlign: "center", marginTop: 12, fontSize: 11 }}>
-              Bumply offers warm, general guidance — not medical advice. For anything urgent, contact your healthcare provider.
-            </p>
+            <p className="muted" style={{ textAlign: "center", marginTop: 12, fontSize: 11 }}>{t("chat.disclaimer", L)}</p>
           </>
         ) : (
           <div className="pay-wall">
-            <h3 className="feat-title">🔒 One-on-one chat is premium</h3>
-            <p className="muted" style={{ marginBottom: 16 }}>
-              Upgrade and chat with Bumply any time — answers grounded in exactly where you are in your journey.
-            </p>
-            <a className="btn-pink" href="/pricing">See plans</a>
+            <h3 className="feat-title">{t("chat.gateTitle", L)}</h3>
+            <p className="muted" style={{ marginBottom: 16 }}>{t("chat.gateDesc", L)}</p>
+            <a className="btn-pink" href="/pricing">{t("dash.seeplans", L)}</a>
           </div>
         )}
       </div>

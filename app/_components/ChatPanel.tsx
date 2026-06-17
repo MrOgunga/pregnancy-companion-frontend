@@ -1,5 +1,7 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
+import { normalizeLang } from "@/lib/languages";
+import { t } from "@/lib/i18n";
 
 type Msg = { role: "user" | "assistant"; content: string };
 
@@ -7,11 +9,14 @@ export default function ChatPanel({
   name,
   initial,
   suggestions,
+  lang,
 }: {
   name: string;
   initial: Msg[];
   suggestions: string[];
+  lang?: string | null;
 }) {
+  const L = normalizeLang(lang);
   const [msgs, setMsgs] = useState<Msg[]>(initial);
   const [input, setInput] = useState("");
   const [busy, setBusy] = useState(false);
@@ -84,7 +89,7 @@ export default function ChatPanel({
       <div className="np-input-area">
         <input
           className="np-input"
-          placeholder={`Ask Bumply anything, ${name}…`}
+          placeholder={`${t("chat.placeholder", L)}, ${name}…`}
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && send()}

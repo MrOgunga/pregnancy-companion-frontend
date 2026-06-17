@@ -1,9 +1,12 @@
 "use client";
 import { useEffect, useState } from "react";
+import { normalizeLang } from "@/lib/languages";
+import { t } from "@/lib/i18n";
 
 const GOAL = 10;
 
-export default function KickCounter() {
+export default function KickCounter({ lang }: { lang?: string | null }) {
+  const L = normalizeLang(lang);
   const [active, setActive] = useState(false);
   const [count, setCount] = useState(0);
   const [startedAt, setStartedAt] = useState<number | null>(null);
@@ -51,31 +54,29 @@ export default function KickCounter() {
 
   return (
     <div className="card">
-      <p className="s-label">Kick counter</p>
-      <h3 className="feat-title" style={{ marginBottom: 6 }}>Count to 10 movements</h3>
-      <p className="muted" style={{ marginBottom: 18 }}>
-        From the third trimester, feeling your baby move is reassuring. Tap each time you feel a kick, roll or flutter.
-      </p>
+      <p className="s-label">{t("kick.label", L)}</p>
+      <h3 className="feat-title" style={{ marginBottom: 6 }}>{t("kick.countto10", L)}</h3>
+      <p className="muted" style={{ marginBottom: 18 }}>{t("kick.desc", L)}</p>
 
       {!active ? (
         <button className="f-submit" style={{ maxWidth: 220 }} onClick={start} disabled={saving}>
-          {saving ? "Saving…" : "Start counting 👣"}
+          {saving ? t("common.saving", L) : t("kick.start", L)}
         </button>
       ) : (
         <>
           <div style={{ textAlign: "center", margin: "10px 0 18px" }}>
             <div style={{ fontFamily: "var(--serif)", fontSize: 64, color: "var(--pink)", lineHeight: 1 }}>{count}<span className="muted" style={{ fontSize: 24 }}>/{GOAL}</span></div>
-            <div className="muted">elapsed {mm}:{ss}</div>
+            <div className="muted">{t("kick.elapsed", L)} {mm}:{ss}</div>
           </div>
           <button
             onClick={kick}
             className="btn-pink"
             style={{ width: "100%", padding: "22px", fontSize: 16, justifyContent: "center" }}
           >
-            I felt a kick 🌸
+            {t("kick.felt", L)}
           </button>
           <button className="btn-ghost" style={{ marginTop: 12 }} onClick={() => startedAt && finish(count, startedAt)}>
-            End &amp; save
+            {t("kick.endsave", L)}
           </button>
         </>
       )}

@@ -1,12 +1,14 @@
 "use client";
 import { useState } from "react";
+import { normalizeLang } from "@/lib/languages";
+import { t } from "@/lib/i18n";
 
 const MOODS = [
-  { key: "great", emoji: "😄", label: "Great" },
-  { key: "good", emoji: "🙂", label: "Good" },
-  { key: "okay", emoji: "😐", label: "Okay" },
-  { key: "low", emoji: "😔", label: "Low" },
-  { key: "rough", emoji: "😣", label: "Rough" },
+  { key: "great", emoji: "😄" },
+  { key: "good", emoji: "🙂" },
+  { key: "okay", emoji: "😐" },
+  { key: "low", emoji: "😔" },
+  { key: "rough", emoji: "😣" },
 ];
 
 const SYMPTOMS = [
@@ -14,7 +16,8 @@ const SYMPTOMS = [
   "Swelling", "Trouble sleeping", "Cravings", "Mood swings", "Dizziness", "Constipation",
 ];
 
-export default function JournalForm() {
+export default function JournalForm({ lang }: { lang?: string | null }) {
+  const L = normalizeLang(lang);
   const [mood, setMood] = useState("");
   const [symptoms, setSymptoms] = useState<string[]>([]);
   const [note, setNote] = useState("");
@@ -37,8 +40,8 @@ export default function JournalForm() {
 
   return (
     <div className="card" style={{ marginBottom: 28 }}>
-      <p className="s-label">Today&apos;s check-in</p>
-      <h3 className="feat-title" style={{ marginBottom: 16 }}>How are you feeling?</h3>
+      <p className="s-label">{t("journal.today", L)}</p>
+      <h3 className="feat-title" style={{ marginBottom: 16 }}>{t("journal.howfeeling", L)}</h3>
 
       <div style={{ display: "flex", gap: 10, flexWrap: "wrap", marginBottom: 20 }}>
         {MOODS.map((m) => (
@@ -53,12 +56,12 @@ export default function JournalForm() {
             }}
           >
             <div style={{ fontSize: 26 }}>{m.emoji}</div>
-            <div className="muted" style={{ fontSize: 11 }}>{m.label}</div>
+            <div className="muted" style={{ fontSize: 11 }}>{t(`mood.${m.key}`, L)}</div>
           </button>
         ))}
       </div>
 
-      <label>Any symptoms today?</label>
+      <label>{t("journal.symptomsq", L)}</label>
       <div style={{ display: "flex", gap: 8, flexWrap: "wrap", margin: "8px 0 20px" }}>
         {SYMPTOMS.map((s) => (
           <button
@@ -72,17 +75,17 @@ export default function JournalForm() {
         ))}
       </div>
 
-      <label>Anything you want to remember?</label>
+      <label>{t("journal.rememberq", L)}</label>
       <textarea
         value={note}
         onChange={(e) => setNote(e.target.value)}
-        placeholder="A note to your future self…"
+        placeholder={t("journal.placeholder", L)}
         rows={3}
         style={{ marginTop: 8, marginBottom: 16, resize: "vertical" }}
       />
 
       <button className="f-submit" style={{ maxWidth: 220 }} onClick={save} disabled={busy}>
-        {busy ? "Saving…" : "Save today's entry 🌸"}
+        {busy ? t("common.saving", L) : t("journal.save", L)}
       </button>
     </div>
   );

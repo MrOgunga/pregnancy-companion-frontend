@@ -1,7 +1,18 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { normalizeLang, type LangCode } from "@/lib/languages";
+import { t } from "@/lib/i18n";
+
+function clientLang(): string {
+  if (typeof document === "undefined") return "en";
+  const m = document.cookie.match(/(?:^|; )bumply_lang=([^;]+)/);
+  return m ? decodeURIComponent(m[1]) : "en";
+}
 
 export default function LoginPage() {
+  // Start at "en" to match server HTML, then switch after mount (no hydration mismatch).
+  const [L, setL] = useState<LangCode>("en");
+  useEffect(() => setL(normalizeLang(clientLang())), []);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [busy, setBusy] = useState(false);
@@ -33,24 +44,24 @@ export default function LoginPage() {
           <div className="logo-dot" />
           Bumply
         </a>
-        <h3 className="fc-head">Welcome back, mama</h3>
-        <p className="fc-sub">Sign in to see this week&apos;s update.</p>
+        <h3 className="fc-head">{t("login.welcome", L)}</h3>
+        <p className="fc-sub">{t("login.sub", L)}</p>
         <div className="fg">
-          <label>Email Address</label>
+          <label>{t("common.email", L)}</label>
           <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="amara@email.com"
             onKeyDown={(e) => e.key === "Enter" && submit()} />
         </div>
         <div className="fg">
-          <label>Password</label>
-          <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Your password"
+          <label>{t("common.password", L)}</label>
+          <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="••••••••"
             onKeyDown={(e) => e.key === "Enter" && submit()} />
         </div>
         <button className="f-submit" onClick={submit} disabled={busy}>
-          {busy ? "Signing in…" : "Sign In"}
+          {busy ? t("login.signingin", L) : t("login.signin", L)}
         </button>
         {error && <p className="f-error">{error}</p>}
         <p className="f-note" style={{ marginTop: 18 }}>
-          New here? <a className="auth-link" href="/#register">Create an account</a>
+          {t("login.newhere", L)} <a className="auth-link" href="/#register">{t("login.create", L)}</a>
         </p>
       </div>
     </div>
