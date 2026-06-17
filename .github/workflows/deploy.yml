@@ -5,7 +5,7 @@ name: Deploy to Railway
 
 on:
   push:
-    branches: [main]
+    branches: [dev-shinzii, main]
   workflow_dispatch:
 
 jobs:

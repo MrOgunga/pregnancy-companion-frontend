@@ -11,7 +11,7 @@ push to `main` / `dev-shinzii` and on PRs. This is your build gate.
 
 ### Option A (recommended): Railway native GitHub deploy
 1. In Railway → **New Project → Deploy from GitHub repo** → pick this repo.
-2. Set the **branch** to deploy (e.g. `main` — merge `dev-shinzii` → `main` first, or deploy `dev-shinzii`).
+2. Set the **deploy branch to `dev-shinzii`** (Settings → Source → Branch). Railway redeploys on every push to it.
 3. Add a **Postgres**? No — Bumply uses your existing self-hosted Supabase/Railway Postgres via `SUPABASE_DB_URL`.
 4. Add the env vars below.
 5. Railway auto-deploys on every push to that branch. That's your CD. ✅
