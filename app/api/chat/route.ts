@@ -4,6 +4,7 @@ import { getSession } from "@/lib/session";
 import { getMotherById, getWeeklyUpdateByWeek, recentChat, saveChat, recentJournalSummary } from "@/lib/queries";
 import { currentWeekFrom, trimesterFor } from "@/lib/babyData";
 import { languageInstruction } from "@/lib/languages";
+import { groundingBlock } from "@/lib/rag";
 
 function textResponse(body: string, status = 200) {
   return new Response(body, { status, headers: { "Content-Type": "text/plain; charset=utf-8", "Cache-Control": "no-store" } });
@@ -32,10 +33,16 @@ export async function POST(req: Request) {
   const journal = await recentJournalSummary(mother.id, 5);
   const journalBlock = journal ? `\nHer recent journal check-ins (reference these naturally if relevant):\n${journal}` : "";
 
+  // RAG: retrieve vetted facts relevant to her question to ground the answer.
+  const grounding = await groundingBlock(lastUser, 4);
+  const groundingPrompt = grounding
+    ? `\nVERIFIED REFERENCE (vetted guidance — rely on this, do not contradict it; if it doesn't cover the question, answer carefully from general knowledge and suggest she ask her provider):\n${grounding}`
+    : "";
+
   const system = `You are Bumply, a warm, caring AI pregnancy companion.
 You are speaking with ${mother.full_name}, currently in week ${week} (${trimesterFor(week)} trimester)${
     mother.due_date ? `, due ${mother.due_date}` : ""
-  }. First pregnancy: ${mother.first_pregnancy ? "yes" : "no"}. Dietary notes: ${mother.dietary_restrictions || "none"}. ${context}${journalBlock}
+  }. First pregnancy: ${mother.first_pregnancy ? "yes" : "no"}. Dietary notes: ${mother.dietary_restrictions || "none"}. ${context}${journalBlock}${groundingPrompt}
 Be warm, brief and reassuring. Use her name occasionally. Give practical, trimester-appropriate guidance.
 BE CONCISE: reply in 2–4 short sentences, plain everyday words, no preamble or filler. Use at most a couple of short bullet points only if it genuinely helps.
 You are NOT a doctor: for any warning signs (heavy bleeding, severe or persistent pain, reduced fetal movement, fever, vision changes, severe swelling), gently and clearly urge her to contact her healthcare provider or go to a clinic. Never diagnose or prescribe.

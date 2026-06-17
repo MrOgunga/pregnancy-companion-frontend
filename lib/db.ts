@@ -11,8 +11,9 @@ const globalForDb = globalThis as unknown as { _sql?: ReturnType<typeof postgres
 export const sql =
   globalForDb._sql ??
   postgres(url, {
-    // All app tables live in our dedicated schema, isolated from other apps on this instance.
-    connection: { search_path: SCHEMA },
+    // App tables live in our dedicated schema (first). public + extensions are included
+    // so the pgvector `vector` type resolves wherever the extension was installed.
+    connection: { search_path: `${SCHEMA}, public, extensions` },
     ssl: "prefer",
     prepare: false,
     max: 5,

@@ -236,6 +236,32 @@ export async function setAlertStatus(id: string, status: string, reviewedBy: str
   await sql`update alerts set status = ${status}, reviewed_by = ${reviewedBy} where id = ${id}`;
 }
 
+// --- Clinicians ---
+export type Clinician = { id: string; email: string; password_hash: string; name: string; created_at: string };
+
+export async function getClinicianByEmail(email: string): Promise<Clinician | null> {
+  const rows = await sql<Clinician[]>`select * from clinicians where email = ${email.toLowerCase()} limit 1`;
+  return rows[0] ?? null;
+}
+
+export async function createClinician(email: string, passwordHash: string, name: string): Promise<Clinician> {
+  const rows = await sql<Clinician[]>`
+    insert into clinicians (email, password_hash, name)
+    values (${email.toLowerCase()}, ${passwordHash}, ${name})
+    on conflict (email) do update set password_hash = excluded.password_hash, name = excluded.name
+    returning *`;
+  return rows[0];
+}
+
+export async function listClinicians(): Promise<{ id: string; email: string; name: string; created_at: string }[]> {
+  return sql`select id, email, name, created_at from clinicians order by created_at desc`;
+}
+
+// Recent vitals for a mother (clinician view).
+export async function recentVitalsFor(motherId: string, limit = 8): Promise<Vital[]> {
+  return sql<Vital[]>`select * from vitals where mother_id = ${motherId} order by created_at desc limit ${limit}`;
+}
+
 export async function setUpdateSent(updateId: string, channel: "email" | "whatsapp") {
   if (channel === "email") await sql`update weekly_updates set sent_email = true where id = ${updateId}`;
   else await sql`update weekly_updates set sent_whatsapp = true where id = ${updateId}`;

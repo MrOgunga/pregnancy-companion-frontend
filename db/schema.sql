@@ -141,3 +141,12 @@ create table if not exists preg_companion.alerts (
 );
 create index if not exists idx_alerts_status on preg_companion.alerts(status, created_at desc);
 create index if not exists idx_alerts_mother on preg_companion.alerts(mother_id, created_at desc);
+
+-- Clinicians who can review alerts (human-in-the-loop portal)
+create table if not exists preg_companion.clinicians (
+  id            uuid primary key default gen_random_uuid(),
+  email         text unique not null,
+  password_hash text not null,
+  name          text not null,
+  created_at    timestamptz not null default now()
+);

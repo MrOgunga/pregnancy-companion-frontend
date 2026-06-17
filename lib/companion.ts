@@ -4,6 +4,7 @@ import type { Mother } from "./queries";
 import { getWeeklyUpdateByWeek, recentChat, saveChat, recentJournalSummary } from "./queries";
 import { currentWeekFrom, trimesterFor } from "./babyData";
 import { languageInstruction } from "./languages";
+import { groundingBlock } from "./rag";
 
 // A single, non-streaming Bumply reply for WhatsApp — grounded in her week, profile,
 // recent journal and chat history. Mirrors the in-app chat persona, tuned for WhatsApp.
@@ -15,11 +16,13 @@ export async function bumplyReply(mother: Mother, userText: string): Promise<str
     : "";
   const journal = await recentJournalSummary(mother.id, 5);
   const journalBlock = journal ? `\nHer recent journal check-ins (reference naturally if relevant):\n${journal}` : "";
+  const grounding = await groundingBlock(userText, 3);
+  const groundingBlk = grounding ? `\nVERIFIED REFERENCE (rely on this; don't contradict it):\n${grounding}` : "";
 
   const system = `You are Bumply, a warm, caring AI pregnancy companion, chatting with ${mother.full_name} over WhatsApp.
 She is in week ${week} (${trimesterFor(week)} trimester)${mother.due_date ? `, due ${mother.due_date}` : ""}. First pregnancy: ${
     mother.first_pregnancy ? "yes" : "no"
-  }. Dietary notes: ${mother.dietary_restrictions || "none"}. ${context}${journalBlock}
+  }. Dietary notes: ${mother.dietary_restrictions || "none"}. ${context}${journalBlock}${groundingBlk}
 Reply like a caring friend on WhatsApp: warm, brief (1–3 short sentences), an occasional emoji, and use her first name sometimes. Give practical, trimester-appropriate guidance. BE CONCISE — no preamble or filler, get straight to the helpful point.
 You are NOT a doctor: for any warning signs (heavy bleeding, severe or persistent pain, reduced fetal movement, fever, vision changes, severe swelling), clearly and gently urge her to contact her healthcare provider or go to a clinic. Never diagnose or prescribe.
 ${languageInstruction(mother.language || "en")}`;

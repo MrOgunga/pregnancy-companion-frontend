@@ -9,7 +9,8 @@
     "lint": "next lint",
     "db:setup": "node scripts/setup-db.mjs",
     "remotion:studio": "remotion studio remotion/index.ts",
-    "remotion:render": "tsx scripts/render-week.mts"
+    "remotion:render": "tsx scripts/render-week.mts",
+    "kb:seed": "tsx scripts/seed-kb.mts"
   },
   "dependencies": {
     "@remotion/bundler": "^4.0.479",
