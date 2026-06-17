@@ -8,6 +8,7 @@ import { babyImageFor } from "@/lib/babyImages";
 import { getSettings } from "@/lib/settings";
 import { normalizeLang } from "@/lib/languages";
 import { t } from "@/lib/i18n";
+import { telegramConfigured, telegramBotUsername } from "@/lib/telegram";
 import AppHeader from "../_components/AppHeader";
 import WeekExtras from "../_components/WeekExtras";
 import EnableNotifications from "../_components/EnableNotifications";
@@ -164,6 +165,19 @@ export default async function Dashboard() {
               <p style={{ fontFamily: "var(--serif)", fontSize: 18 }}>{t("nav.hospitals", L)}</p>
               <p className="muted">{t("dash.hospitalsDesc", L)}</p>
             </a>
+            {telegramConfigured() && (
+              <a
+                className="card"
+                href={mother.telegram_chat_id ? `https://t.me/${telegramBotUsername()}` : "/account"}
+                target={mother.telegram_chat_id ? "_blank" : undefined}
+                rel="noreferrer"
+                style={{ display: "block" }}
+              >
+                <div style={{ fontSize: 24, marginBottom: 6 }}>✈️</div>
+                <p style={{ fontFamily: "var(--serif)", fontSize: 18 }}>{mother.telegram_chat_id ? t("dash.tgChat", L) : t("dash.tgConnect", L)}</p>
+                <p className="muted">{mother.telegram_chat_id ? t("dash.tgChatDesc", L) : t("dash.tgConnectDesc", L)}</p>
+              </a>
+            )}
           </div>
         )}
 

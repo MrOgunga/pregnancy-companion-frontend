@@ -11,9 +11,17 @@ import { milestoneAtWeek, type Milestone } from "./milestones";
 import { dailyTipFor } from "./dailyTips";
 import { sendEmail, emailConfigured } from "./email";
 import { sendWhatsApp, whatsappConfigured } from "./whatsapp";
+import { sendTelegram } from "./telegram";
 
 function firstName(m: Mother): string {
   return (m.full_name || "mama").split(" ")[0];
+}
+
+// Send to the mom's linked Telegram, if any.
+async function tgNotify(m: Mother, text: string): Promise<boolean> {
+  if (!m.telegram_chat_id) return false;
+  const r = await sendTelegram(m.telegram_chat_id, text).catch(() => ({ sent: false }));
+  return !!r.sent;
 }
 
 /** Push "your week N update is ready" once per (mother, week). */
@@ -26,6 +34,7 @@ export async function pushWeeklyReady(mother: Mother, week: number): Promise<boo
     url: "/dashboard",
     tag: "weekly",
   });
+  await tgNotify(mother, `🌸 ${firstName(mother)}, your week ${week} Bumply update is ready! Open the app to see how your baby is growing this week.`);
   await markNotified(mother.id, "weekly", ref);
   return n > 0;
 }
@@ -61,6 +70,7 @@ export async function sendAlert(mother: Mother, alert: { level: string; message:
   if (whatsappConfigured() && phone) {
     await sendWhatsApp(phone, `${title}\n\n${firstName(mother)}, ${alert.message}`).catch(() => {});
   }
+  await tgNotify(mother, `${title}\n\n${firstName(mother)}, ${alert.message}`);
 }
 
 /** Days since epoch — used to rotate the daily tip deterministically per date. */
@@ -89,6 +99,7 @@ export async function runDailyEngagement(dateStr: string): Promise<DailyResult> 
       const ref = `anc-${item.week}`;
       if (await alreadyNotified(m.id, "anc", ref)) continue;
       await sendPushToMother(m.id, { title: `🗓 ${item.title}`, body: item.detail, url: "/appointments", tag: ref });
+      await tgNotify(m, `🗓 ${item.title}\n${item.detail}`);
       await markNotified(m.id, "anc", ref);
       anc++;
     }
@@ -102,6 +113,7 @@ export async function runDailyEngagement(dateStr: string): Promise<DailyResult> 
         if (emailConfigured()) {
           await sendEmail(m.email, ms.title, milestoneEmailHtml(m, ms)).catch(() => {});
         }
+        await tgNotify(m, `${ms.title}\n${firstName(m)}, ${ms.body}`);
         await markNotified(m.id, "milestone", ref);
         milestone++;
       }
@@ -112,8 +124,9 @@ export async function runDailyEngagement(dateStr: string): Promise<DailyResult> 
     if (!(await alreadyNotified(m.id, "daily", dref))) {
       const tip = dailyTipFor(week, daySeed(dateStr));
       const n = await sendPushToMother(m.id, { title: "Bumply tip 🌿", body: tip, url: "/dashboard", tag: "daily" });
+      const tg = await tgNotify(m, `🌿 Bumply tip: ${tip}`);
       await markNotified(m.id, "daily", dref);
-      if (n > 0) daily++;
+      if (n > 0 || tg) daily++;
     }
   }
 
