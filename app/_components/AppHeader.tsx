@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { normalizeLang } from "@/lib/languages";
 import { t } from "@/lib/i18n";
 import LanguageSwitcher from "./LanguageSwitcher";
+import BottomNav from "./BottomNav";
 
 type Features = { journal: boolean; tools: boolean; chat: boolean };
 
@@ -49,14 +50,16 @@ export default function AppHeader({
           Bumply
         </a>
         <div className="app-nav">
-          {link("/dashboard", t("nav.dashboard", L), "dashboard")}
-          {features.journal && link("/journal", t("nav.journal", L), "journal")}
-          {features.tools && link("/tools", t("nav.tools", L), "tools")}
-          {features.chat && link("/chat", t("nav.chat", L), "chat")}
-          {link("/vitals", t("nav.vitals", L), "vitals")}
-          {link("/hospitals", t("nav.hospitals", L), "hospitals")}
-          {link("/library", t("nav.library", L), "library")}
-          {link("/account", t("nav.account", L), "account")}
+          <span className="app-nav-links">
+            {link("/dashboard", t("nav.dashboard", L), "dashboard")}
+            {features.journal && link("/journal", t("nav.journal", L), "journal")}
+            {features.tools && link("/tools", t("nav.tools", L), "tools")}
+            {features.chat && link("/chat", t("nav.chat", L), "chat")}
+            {link("/vitals", t("nav.vitals", L), "vitals")}
+            {link("/hospitals", t("nav.hospitals", L), "hospitals")}
+            {link("/library", t("nav.library", L), "library")}
+            {link("/account", t("nav.account", L), "account")}
+          </span>
           <span className={"badge " + (plan === "premium" ? "badge-premium" : "badge-free")}>{plan}</span>
           <LanguageSwitcher lang={L} compact />
           <button className="btn-ghost" onClick={logout} style={{ textTransform: "uppercase", fontSize: 12 }}>
@@ -64,6 +67,7 @@ export default function AppHeader({
           </button>
         </div>
       </div>
+      <BottomNav active={active} features={features} lang={L} />
     </div>
   );
 }

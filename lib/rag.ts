@@ -53,6 +53,29 @@ export async function groundingBlock(query: string, k = 4): Promise<string> {
   }
 }
 
+// Like groundingBlock but also returns the distinct source labels used (for citations).
+export async function groundingWithSources(query: string, k = 4): Promise<{ block: string; sources: string[] }> {
+  try {
+    const [vec, kw] = await Promise.all([
+      retrieve(query, k).then((h) => h.filter((x) => x.distance < 0.65)).catch(() => []),
+      meiliSearch(query, 3).catch(() => []),
+    ]);
+    const seen = new Set<string>();
+    const lines: string[] = [];
+    const sources = new Set<string>();
+    for (const h of [...vec, ...kw]) {
+      const key = h.content.slice(0, 40).toLowerCase();
+      if (seen.has(key)) continue;
+      seen.add(key);
+      lines.push(`- ${h.content}${h.source ? ` (${h.source})` : ""}`);
+      if (h.source) sources.add(h.source);
+    }
+    return { block: lines.slice(0, 5).join("\n"), sources: [...sources].slice(0, 3) };
+  } catch {
+    return { block: "", sources: [] };
+  }
+}
+
 export async function ingest(items: { title?: string; source?: string; content: string }[]): Promise<number> {
   if (items.length === 0) return 0;
   const embs = await embed(items.map((i) => i.content), "passage");

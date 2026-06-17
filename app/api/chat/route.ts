@@ -4,7 +4,7 @@ import { getSession } from "@/lib/session";
 import { getMotherById, getWeeklyUpdateByWeek, recentChat, saveChat, recentJournalSummary } from "@/lib/queries";
 import { currentWeekFrom, trimesterFor } from "@/lib/babyData";
 import { languageInstruction } from "@/lib/languages";
-import { groundingBlock } from "@/lib/rag";
+import { groundingWithSources } from "@/lib/rag";
 import { preferencesBlock, toneMaxTokens } from "@/lib/personalize";
 
 function textResponse(body: string, status = 200) {
@@ -35,7 +35,7 @@ export async function POST(req: Request) {
   const journalBlock = journal ? `\nHer recent journal check-ins (reference these naturally if relevant):\n${journal}` : "";
 
   // RAG: retrieve vetted facts relevant to her question to ground the answer.
-  const grounding = await groundingBlock(lastUser, 4);
+  const { block: grounding, sources } = await groundingWithSources(lastUser, 4);
   const groundingPrompt = grounding
     ? `\nVERIFIED REFERENCE (vetted guidance — rely on this, do not contradict it; if it doesn't cover the question, answer carefully from general knowledge and suggest she ask her provider):\n${grounding}`
     : "";
@@ -85,6 +85,12 @@ ${languageInstruction(mother.language || "en")}${preferencesBlock(mother)}`;
       } catch (e) {
         console.error("chat stream error:", e);
         controller.enqueue(encoder.encode("\n\n(Sorry mama, I lost my train of thought — please try again. 🌸)"));
+      }
+      // Cite the vetted sources the answer drew on.
+      if (full.trim() && sources.length) {
+        const foot = `\n\n📚 ${sources.join(" · ")}`;
+        controller.enqueue(encoder.encode(foot));
+        full += foot;
       }
       controller.close();
       try {
