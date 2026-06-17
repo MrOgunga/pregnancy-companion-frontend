@@ -3,9 +3,13 @@ import VideoEmbed from "./_components/VideoEmbed";
 import ScrollReveal from "./_components/ScrollReveal";
 import BumplyChat from "./_components/BumplyChat";
 import RegisterForm from "./_components/RegisterForm";
+import LanguageSwitcher from "./_components/LanguageSwitcher";
 import { DEV_STAGES } from "@/lib/babyImages";
+import { getUiLang } from "@/lib/serverLang";
+import { t } from "@/lib/i18n";
 
-export default function Home() {
+export default async function Home() {
+  const L = await getUiLang();
   return (
     <>
       <nav>
@@ -15,12 +19,15 @@ export default function Home() {
             Bumply
           </div>
           <ul className="nav-links">
-            <li><a href="#how">How It Works</a></li>
-            <li><a href="#features">Features</a></li>
-            <li><a href="#stories">Stories</a></li>
-            <li><a href="/login">Sign In</a></li>
+            <li><a href="#how">{t("home.nav.how", L)}</a></li>
+            <li><a href="#features">{t("home.nav.features", L)}</a></li>
+            <li><a href="#stories">{t("home.nav.stories", L)}</a></li>
+            <li><a href="/login">{t("home.nav.signin", L)}</a></li>
           </ul>
-          <a href="#register" className="nav-cta">Start Your Journey</a>
+          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+            <LanguageSwitcher lang={L} compact />
+            <a href="#register" className="nav-cta">{t("home.nav.start", L)}</a>
+          </div>
         </div>
       </nav>
 
@@ -33,24 +40,21 @@ export default function Home() {
         </div>
         <div className="hero-inner">
           <div>
-            <div className="hero-eyebrow"><div className="eyebrow-dot" />AI Pregnancy Companion</div>
+            <div className="hero-eyebrow"><div className="eyebrow-dot" />{t("home.hero.eyebrow", L)}</div>
             <h1 className="hero-h">
-              Every week,<br />
-              <em>beautifully</em><br />
-              <span className="lav">guided.</span>
+              {t("home.hero.l1", L)}<br />
+              <em>{t("home.hero.l2", L)}</em><br />
+              <span className="lav">{t("home.hero.l3", L)}</span>
             </h1>
-            <p className="hero-p">
-              Personalised weekly updates, fetal development insights, meal plans and emotional
-              support — delivered to you every Monday by your AI companion, Bumply.
-            </p>
+            <p className="hero-p">{t("home.hero.p", L)}</p>
             <div className="hero-btns">
-              <a className="btn-pink" href="#register">Begin My Journey ✨</a>
-              <a className="btn-ghost" href="#how">See How It Works</a>
+              <a className="btn-pink" href="#register">{t("home.hero.cta1", L)}</a>
+              <a className="btn-ghost" href="#how">{t("home.hero.cta2", L)}</a>
             </div>
             <div className="hero-trust">
-              <div className="trust-item"><div className="trust-icon">🌸</div><div className="trust-text">Personalised to your week</div></div>
-              <div className="trust-item"><div className="trust-icon">🥗</div><div className="trust-text">Weekly meal plans</div></div>
-              <div className="trust-item"><div className="trust-icon">💌</div><div className="trust-text">Partner notes included</div></div>
+              <div className="trust-item"><div className="trust-icon">🌸</div><div className="trust-text">{t("home.hero.t1", L)}</div></div>
+              <div className="trust-item"><div className="trust-icon">🥗</div><div className="trust-text">{t("home.hero.t2", L)}</div></div>
+              <div className="trust-item"><div className="trust-icon">💌</div><div className="trust-text">{t("home.hero.t3", L)}</div></div>
             </div>
           </div>
 
@@ -81,9 +85,9 @@ export default function Home() {
       <section id="how">
         <div className="wrap">
           <div className="how-header reveal">
-            <p className="s-label">How It Works</p>
-            <h2 className="s-title">Simple, <em>beautiful</em> care</h2>
-            <p className="s-sub">From registration to weekly updates — here&apos;s exactly how Bumply walks with you through every week of your journey.</p>
+            <p className="s-label">{t("home.nav.how", L)}</p>
+            <h2 className="s-title">{t("home.how.title", L)}</h2>
+            <p className="s-sub">{t("home.how.sub", L)}</p>
           </div>
           <VideoEmbed />
           <div className="steps-grid reveal">
@@ -110,31 +114,31 @@ export default function Home() {
       <section id="features">
         <div className="wrap">
           <div className="reveal">
-            <p className="s-label">What You Get</p>
-            <h2 className="s-title">Everything for your <em>journey</em></h2>
+            <p className="s-label">{t("home.features.label", L)}</p>
+            <h2 className="s-title">{t("home.features.title", L)}</h2>
           </div>
           <div className="features-grid reveal">
             <div className="feat-card fc-pink">
               <div className="feat-icon">👶</div>
-              <div className="feat-title">Weekly fetal development</div>
+              <div className="feat-title">{t("home.feat1.title", L)}</div>
               <div className="feat-desc">See your baby&apos;s actual size, weight and length with a real fetal image for your stage of pregnancy — from a single cell to a fully formed little one.</div>
               <span className="feat-tag">Visual · Medical-grade</span>
             </div>
             <div className="feat-card fc-lav">
               <div className="feat-icon">🥗</div>
-              <div className="feat-title">Personalised 7-day meal plan</div>
+              <div className="feat-title">{t("home.feat2.title", L)}</div>
               <div className="feat-desc">Every meal tailored to your trimester, dietary restrictions and what your baby needs most that specific week.</div>
               <span className="feat-tag">AI-generated · Weekly</span>
             </div>
             <div className="feat-card fc-blue">
               <div className="feat-icon">💌</div>
-              <div className="feat-title">Partner notes</div>
+              <div className="feat-title">{t("home.feat3.title", L)}</div>
               <div className="feat-desc">A warm, personal message sent directly to your partner — by name — on what&apos;s happening with the baby and how to support you.</div>
               <span className="feat-tag">Personalised · Heartfelt</span>
             </div>
             <div className="feat-card fc-gold">
               <div className="feat-icon">🎯</div>
-              <div className="feat-title">Milestone celebrations</div>
+              <div className="feat-title">{t("home.feat4.title", L)}</div>
               <div className="feat-desc">Special messages at week 13, 27 and 40 — your trimester completions — to celebrate how far you&apos;ve come.</div>
               <span className="feat-tag">Automated · Celebratory</span>
             </div>
@@ -146,9 +150,9 @@ export default function Home() {
       <section id="grow">
         <div className="wrap">
           <div className="how-header reveal">
-            <p className="s-label">Real development</p>
-            <h2 className="s-title">Watch your baby <em>grow</em></h2>
-            <p className="s-sub">From a single cell to a fully formed little one — a real image of your baby&apos;s stage, week by week.</p>
+            <p className="s-label">{t("home.grow.label", L)}</p>
+            <h2 className="s-title">{t("home.grow.title", L)}</h2>
+            <p className="s-sub">{t("home.grow.sub", L)}</p>
           </div>
           <div className="grow-grid reveal">
             {DEV_STAGES.map((s) => (
@@ -170,12 +174,9 @@ export default function Home() {
         <div className="wrap">
           <div className="register-layout">
             <div className="reveal">
-              <p className="s-label">Join Bumply</p>
-              <h2 className="reg-side-title">Your journey<br />starts <em>here</em></h2>
-              <p className="reg-side-p">
-                Register once and Bumply delivers a beautifully personalised pregnancy update — in your
-                dashboard and your inbox — every week of your journey.
-              </p>
+              <p className="s-label">{t("home.reg.label", L)}</p>
+              <h2 className="reg-side-title">{t("dash.journey", L)}</h2>
+              <p className="reg-side-p">{t("home.reg.p", L)}</p>
               <div className="promise-list">
                 <div className="promise-row">
                   <div className="p-icon pink">🌸</div>
@@ -202,7 +203,7 @@ export default function Home() {
       <section id="stories">
         <div className="wrap">
           <div className="reveal">
-            <p className="s-label">Mama Stories</p>
+            <p className="s-label">{t("home.stories.label", L)}</p>
             <h2 className="s-title">From the mamas <em>themselves</em></h2>
           </div>
           <div className="testi-grid reveal">
@@ -231,15 +232,15 @@ export default function Home() {
           <div className="foot-grid">
             <div>
               <div className="foot-logo">Bumply <span>Companion</span></div>
-              <p className="foot-desc">AI-powered pregnancy companion delivering personalised weekly care to mamas across Nigeria and beyond.</p>
+              <p className="foot-desc">{t("home.foot.desc", L)}</p>
             </div>
             <div>
               <div className="foot-col-title">Navigate</div>
               <ul className="foot-links">
-                <li><a href="#how">How It Works</a></li>
-                <li><a href="#features">Features</a></li>
-                <li><a href="#stories">Mama Stories</a></li>
-                <li><a href="/login">Sign In</a></li>
+                <li><a href="#how">{t("home.nav.how", L)}</a></li>
+                <li><a href="#features">{t("home.nav.features", L)}</a></li>
+                <li><a href="#stories">{t("home.stories.label", L)}</a></li>
+                <li><a href="/login">{t("home.nav.signin", L)}</a></li>
               </ul>
             </div>
             <div>

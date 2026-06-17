@@ -79,7 +79,7 @@ export default async function Dashboard() {
           />
           <p className="muted" style={{ textAlign: "center", marginBottom: 12, fontSize: 13 }}>{babyImg.stage}</p>
           <h2 className="feat-title" style={{ fontSize: 26, textAlign: "center" }}>
-            Your baby is {baby ? `${babySizeText(week)}` : "just beginning their journey 🌱"}
+            {t("dash.yourbabyis", L)} {baby ? `${babySizeText(week)}` : "🌱"}
           </h2>
           {baby && (
             <div className="grid-2" style={{ marginTop: 14 }}>
@@ -115,16 +115,14 @@ export default async function Dashboard() {
             )}
             {premium ? (
               <div className="grid-2">
-                <a className="btn-pink" href={`/my-update/${current.slug}`}>Open full weekly page →</a>
-                <a className="btn-ghost" href="/chat">Ask Bumply about this week</a>
+                <a className="btn-pink" href={`/my-update/${current.slug}`}>{t("dash.openfull", L)}</a>
+                <a className="btn-ghost" href="/chat">{t("dash.askabout", L)}</a>
               </div>
             ) : (
               <div className="pay-wall">
-                <h3 className="feat-title">🔒 Unlock your full week</h3>
-                <p className="muted" style={{ marginBottom: 16 }}>
-                  Your 7-day meal plan, partner notes and one-on-one chat with Bumply are part of premium.
-                </p>
-                <a className="btn-pink" href="/pricing">See plans</a>
+                <h3 className="feat-title">{t("dash.unlock", L)}</h3>
+                <p className="muted" style={{ marginBottom: 16 }}>{t("dash.unlockDesc", L)}</p>
+                <a className="btn-pink" href="/pricing">{t("dash.seeplans", L)}</a>
               </div>
             )}
           </div>
@@ -141,29 +139,29 @@ export default async function Dashboard() {
               <a className="card" href="/journal" style={{ display: "block" }}>
                 <div style={{ fontSize: 24, marginBottom: 6 }}>📔</div>
                 <p style={{ fontFamily: "var(--serif)", fontSize: 18 }}>{t("dash.feeling", L)}</p>
-                <p className="muted">Log your mood &amp; symptoms — Bumply remembers.</p>
+                <p className="muted">{t("dash.feelingDesc", L)}</p>
               </a>
             )}
             {features.tools && (
               <a className="card" href="/tools" style={{ display: "block" }}>
                 <div style={{ fontSize: 24, marginBottom: 6 }}>👣</div>
-                <p style={{ fontFamily: "var(--serif)", fontSize: 18 }}>Pregnancy tools</p>
-                <p className="muted">Kick counter &amp; contraction timer for later weeks.</p>
+                <p style={{ fontFamily: "var(--serif)", fontSize: 18 }}>{t("dash.pregtools", L)}</p>
+                <p className="muted">{t("dash.pregtoolsDesc", L)}</p>
               </a>
             )}
             <a className="card" href="/appointments" style={{ display: "block" }}>
               <div style={{ fontSize: 24, marginBottom: 6 }}>🗓️</div>
-              <p style={{ fontFamily: "var(--serif)", fontSize: 18 }}>Appointments</p>
-              <p className="muted">Your antenatal visits, scans &amp; tests — with reminders.</p>
+              <p style={{ fontFamily: "var(--serif)", fontSize: 18 }}>{t("dash.appointments", L)}</p>
+              <p className="muted">{t("dash.apptDesc", L)}</p>
             </a>
           </div>
         )}
 
         {/* History */}
         <p className="s-label">{t("dash.yourweeks", L)}</p>
-        <h3 className="feat-title" style={{ marginBottom: 16 }}>Every update, kept for you</h3>
+        <h3 className="feat-title" style={{ marginBottom: 16 }}>{t("dash.everyupdate", L)}</h3>
         {all.length === 0 ? (
-          <p className="muted">Your weekly pages will collect here as your journey unfolds.</p>
+          <p className="muted">{t("dash.collecthere", L)}</p>
         ) : (
           <div className="grid-2">
             {all.map((u) => (

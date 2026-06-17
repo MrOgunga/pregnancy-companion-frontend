@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { after } from "next/server";
+import { cookies } from "next/headers";
 import bcrypt from "bcryptjs";
 import { createMother, getMotherByEmail } from "@/lib/queries";
 import { createSession } from "@/lib/session";
@@ -50,6 +51,7 @@ export async function POST(req: Request) {
     });
 
     await createSession({ sub: mother.id, email: mother.email });
+    (await cookies()).set("bumply_lang", normalizeLang(b.language), { path: "/", maxAge: 60 * 60 * 24 * 365, sameSite: "lax" });
 
     // Respond instantly; generate her first personal notes after the response is sent.
     // The dashboard shows accurate baby facts immediately and polls for these extras.

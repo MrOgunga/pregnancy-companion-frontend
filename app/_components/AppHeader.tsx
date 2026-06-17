@@ -1,8 +1,8 @@
 "use client";
 
-import { useState } from "react";
-import { LANGUAGES, normalizeLang } from "@/lib/languages";
+import { normalizeLang } from "@/lib/languages";
 import { t } from "@/lib/i18n";
+import LanguageSwitcher from "./LanguageSwitcher";
 
 type Features = { journal: boolean; tools: boolean; chat: boolean };
 
@@ -17,23 +17,11 @@ export default function AppHeader({
   features?: Features;
   lang?: string | null;
 }) {
-  const [busy, setBusy] = useState(false);
   const L = normalizeLang(lang);
 
   async function logout() {
     await fetch("/api/auth/logout", { method: "POST" });
     window.location.href = "/";
-  }
-
-  async function changeLang(next: string) {
-    if (next === L) return;
-    setBusy(true);
-    await fetch("/api/account/language", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ language: next }),
-    });
-    window.location.reload(); // re-render server components in the new language
   }
 
   const link = (href: string, label: string, key: string) => (
@@ -56,27 +44,7 @@ export default function AppHeader({
           {features.chat && link("/chat", t("nav.chat", L), "chat")}
           {link("/account", t("nav.account", L), "account")}
           <span className={"badge " + (plan === "premium" ? "badge-premium" : "badge-free")}>{plan}</span>
-          <select
-            aria-label="Language"
-            value={L}
-            disabled={busy}
-            onChange={(e) => changeLang(e.target.value)}
-            style={{
-              fontSize: 12,
-              padding: "5px 8px",
-              borderRadius: 8,
-              border: "1px solid var(--border)",
-              background: "var(--cream)",
-              color: "var(--ink-mid)",
-              cursor: "pointer",
-            }}
-          >
-            {LANGUAGES.map((l) => (
-              <option key={l.code} value={l.code}>
-                {l.native}
-              </option>
-            ))}
-          </select>
+          <LanguageSwitcher lang={L} compact />
           <button className="btn-ghost" onClick={logout} style={{ textTransform: "uppercase", fontSize: 12 }}>
             {t("nav.signout", L)}
           </button>
