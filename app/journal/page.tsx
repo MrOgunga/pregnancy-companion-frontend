@@ -23,12 +23,30 @@ export default async function JournalPage() {
   const entries = await listJournalEntries(mother.id);
   const L = normalizeLang(mother.language);
 
+  // Consecutive-day journaling streak (counts from the latest entry if it's today/yesterday).
+  const days = [...new Set(entries.map((e) => new Date(e.entry_date).toISOString().slice(0, 10)))].sort().reverse();
+  let streak = 0;
+  if (days.length) {
+    const todayKey = new Date().toISOString().slice(0, 10);
+    const yKey = new Date(Date.now() - 86400000).toISOString().slice(0, 10);
+    if (days[0] === todayKey || days[0] === yKey) {
+      let expect = new Date(days[0] + "T00:00:00Z");
+      for (const d of days) {
+        if (d === expect.toISOString().slice(0, 10)) { streak++; expect = new Date(expect.getTime() - 86400000); }
+        else break;
+      }
+    }
+  }
+
   return (
     <>
       <AppHeader plan={mother.plan} lang={mother.language} active="journal" features={{ journal: settings.journal_enabled, tools: settings.tools_enabled, chat: settings.chat_enabled }} />
       <div className="app-shell" style={{ maxWidth: 720 }}>
         <p className="s-label">{t("nav.journal", L)}</p>
-        <h1 className="s-title" style={{ marginBottom: 20 }}>{t("journal.title", L)}</h1>
+        <h1 className="s-title" style={{ marginBottom: streak > 1 ? 8 : 20 }}>{t("journal.title", L)}</h1>
+        {streak > 1 && (
+          <p style={{ marginBottom: 20, fontFamily: "var(--serif)", fontSize: 18, color: "var(--pink)" }}>🔥 {streak}-day streak — keep it going!</p>
+        )}
 
         <JournalForm lang={mother.language} />
 

@@ -92,6 +92,7 @@ export default async function VitalsPage() {
                   <Spark values={series} />
                   <p className="muted" style={{ fontSize: 11, marginTop: 8 }}>
                     {rows.length} reading{rows.length > 1 ? "s" : ""} · latest {new Date(latest.created_at).toLocaleDateString()}
+                    {meta.normal ? ` · normal: ${meta.normal}` : ""}
                   </p>
                 </div>
               );

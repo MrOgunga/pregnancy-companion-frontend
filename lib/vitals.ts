@@ -10,12 +10,13 @@ export const VITAL_KINDS: {
   fields?: [string, string];
   emoji: string;
   hint?: string;
+  normal?: string;
 }[] = [
-  { kind: "bp", label: "Blood pressure", unit: "mmHg", dual: true, fields: ["Systolic", "Diastolic"], emoji: "🩸", hint: "e.g. 120 / 80" },
+  { kind: "bp", label: "Blood pressure", unit: "mmHg", dual: true, fields: ["Systolic", "Diastolic"], emoji: "🩸", hint: "e.g. 120 / 80", normal: "below 120/80" },
   { kind: "weight", label: "Weight", unit: "kg", emoji: "⚖️" },
-  { kind: "temp", label: "Temperature", unit: "°C", emoji: "🌡️" },
-  { kind: "fhr", label: "Baby's heartbeat", unit: "bpm", emoji: "💓", hint: "from a doppler / scan" },
-  { kind: "glucose", label: "Blood sugar", unit: "mmol/L", emoji: "🍬" },
+  { kind: "temp", label: "Temperature", unit: "°C", emoji: "🌡️", normal: "36.5–37.5 °C" },
+  { kind: "fhr", label: "Baby's heartbeat", unit: "bpm", emoji: "💓", hint: "from a doppler / scan", normal: "110–160 bpm" },
+  { kind: "glucose", label: "Blood sugar", unit: "mmol/L", emoji: "🍬", normal: "below 7.8 after meals" },
 ];
 
 export function vitalMeta(kind: string) {
