@@ -5,6 +5,7 @@ import { bumplyReply } from "@/lib/companion";
 import { sendText, webhookSecret } from "@/lib/evolution";
 
 export const dynamic = "force-dynamic";
+export const maxDuration = 120; // give the AI round-trip + delayed send room to finish in after()
 
 // Evolution can verify the URL with a GET.
 export async function GET() {
@@ -70,7 +71,8 @@ export async function POST(req: Request) {
         }
 
         const reply = await bumplyReply(mother, text);
-        await sendText(phone, reply);
+        const sent = await sendText(phone, reply);
+        console.log(`[wa] reply to ${phone} (${mother.full_name}): sent=${sent.ok}${sent.error ? ` error=${sent.error}` : ""}`);
       } catch (e) {
         console.error("whatsapp webhook handler error:", e);
       }
