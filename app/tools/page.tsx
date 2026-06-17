@@ -23,7 +23,7 @@ export default async function ToolsPage() {
 
   return (
     <>
-      <AppHeader plan={mother.plan} active="tools" features={{ journal: settings.journal_enabled, tools: settings.tools_enabled, chat: settings.chat_enabled }} />
+      <AppHeader plan={mother.plan} lang={mother.language} active="tools" features={{ journal: settings.journal_enabled, tools: settings.tools_enabled, chat: settings.chat_enabled }} />
       <div className="app-shell" style={{ maxWidth: 720 }}>
         <p className="s-label">Tools</p>
         <h1 className="s-title" style={{ marginBottom: 8 }}>Your <em>toolkit</em></h1>

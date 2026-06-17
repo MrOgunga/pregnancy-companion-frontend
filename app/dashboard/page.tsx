@@ -1,11 +1,16 @@
+import { existsSync } from "node:fs";
+import { join } from "node:path";
 import { redirect } from "next/navigation";
 import { getSession } from "@/lib/session";
 import { getMotherById, listWeeklyUpdates, getWeeklyUpdateByWeek, updateMotherWeek } from "@/lib/queries";
 import { currentWeekFrom, getBabyData, babySizeText, trimesterFor, progressPct } from "@/lib/babyData";
 import { babyImageFor } from "@/lib/babyImages";
 import { getSettings } from "@/lib/settings";
+import { normalizeLang } from "@/lib/languages";
+import { t } from "@/lib/i18n";
 import AppHeader from "../_components/AppHeader";
 import WeekExtras from "../_components/WeekExtras";
+import EnableNotifications from "../_components/EnableNotifications";
 
 export const dynamic = "force-dynamic";
 
@@ -28,19 +33,24 @@ export default async function Dashboard() {
   const weeksLeft = Math.max(0, 40 - week);
   const settings = await getSettings();
   const features = { journal: settings.journal_enabled, tools: settings.tools_enabled, chat: settings.chat_enabled };
+  const L = normalizeLang(mother.language);
+  // Shareable "Week N" recap video (pre-rendered via `npm run remotion:render`).
+  const shareVideo = existsSync(join(process.cwd(), "public", "share", `week-${week}.mp4`)) ? `/share/week-${week}.mp4` : null;
 
   return (
     <>
-      <AppHeader plan={mother.plan} active="dashboard" features={features} />
+      <AppHeader plan={mother.plan} lang={mother.language} active="dashboard" features={features} />
       <div className="app-shell">
-        <p className="s-label">Your journey</p>
+        <p className="s-label">{t("dash.journey", L)}</p>
         <h1 className="s-title" style={{ marginBottom: 6 }}>
-          Hello, <em>{mother.full_name}</em>
+          {t("dash.hello", L)}, <em>{mother.full_name}</em>
         </h1>
         <p className="muted" style={{ marginBottom: 24 }}>
-          You&apos;re in <strong>week {week}</strong> · {trimester} trimester ·{" "}
-          {weeksLeft === 0 ? "any day now! 🎉" : `${weeksLeft} weeks to go`}
+          {t("dash.youarein", L)} <strong>{t("dash.week", L)} {week}</strong> · {trimester} {t("dash.trimester", L)} ·{" "}
+          {weeksLeft === 0 ? t("dash.anyday", L) : `${weeksLeft} ${t("dash.weekstogo", L)}`}
         </p>
+
+        <EnableNotifications />
 
         {/* Progress bar */}
         <div style={{ height: 8, background: "var(--lav-pale)", borderRadius: 100, overflow: "hidden", marginBottom: 28 }}>
@@ -49,7 +59,7 @@ export default async function Dashboard() {
 
         {/* Authoritative baby hero — instant, never waits on AI */}
         <div className="card" style={{ marginBottom: 20 }}>
-          <p className="s-label">This week</p>
+          <p className="s-label">{t("dash.thisweek", L)}</p>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={babyImg.src}
@@ -64,7 +74,7 @@ export default async function Dashboard() {
               display: "block",
               margin: "4px auto 6px",
               border: "5px solid #fff",
-              boxShadow: "0 8px 28px rgba(232,123,146,.28)",
+              boxShadow: "0 8px 28px rgba(201,123,90,.28)",
             }}
           />
           <p className="muted" style={{ textAlign: "center", marginBottom: 12, fontSize: 13 }}>{babyImg.stage}</p>
@@ -74,11 +84,11 @@ export default async function Dashboard() {
           {baby && (
             <div className="grid-2" style={{ marginTop: 14 }}>
               <div className="card" style={{ background: "var(--pink-pale)", border: "none" }}>
-                <p className="s-label">Length</p>
+                <p className="s-label">{t("dash.length", L)}</p>
                 <p style={{ fontFamily: "var(--serif)", fontSize: 28 }}>{baby.lengthCm} cm</p>
               </div>
               <div className="card" style={{ background: "var(--lav-pale)", border: "none" }}>
-                <p className="s-label">Weight</p>
+                <p className="s-label">{t("dash.weight", L)}</p>
                 <p style={{ fontFamily: "var(--serif)", fontSize: 28 }}>
                   {baby.weightG >= 1000 ? `${(baby.weightG / 1000).toFixed(2)} kg` : baby.weightG > 0 ? `${baby.weightG} g` : "a few mg"}
                 </p>
@@ -88,6 +98,11 @@ export default async function Dashboard() {
           <p className="muted" style={{ marginTop: 14 }}>
             {current?.baby_development || (baby ? `This week, ${baby.development}.` : "Take it gently — these early weeks matter.")}
           </p>
+          {shareVideo && (
+            <a className="btn-ghost" href={shareVideo} download style={{ marginTop: 14, display: "inline-flex" }}>
+              📲 Download your week {week} video to share
+            </a>
+          )}
         </div>
 
         {/* AI extras: affirmation + premium content, or the "writing…" state */}
@@ -125,7 +140,7 @@ export default async function Dashboard() {
             {features.journal && (
               <a className="card" href="/journal" style={{ display: "block" }}>
                 <div style={{ fontSize: 24, marginBottom: 6 }}>📔</div>
-                <p style={{ fontFamily: "var(--serif)", fontSize: 18 }}>How are you feeling today?</p>
+                <p style={{ fontFamily: "var(--serif)", fontSize: 18 }}>{t("dash.feeling", L)}</p>
                 <p className="muted">Log your mood &amp; symptoms — Bumply remembers.</p>
               </a>
             )}
@@ -136,11 +151,16 @@ export default async function Dashboard() {
                 <p className="muted">Kick counter &amp; contraction timer for later weeks.</p>
               </a>
             )}
+            <a className="card" href="/appointments" style={{ display: "block" }}>
+              <div style={{ fontSize: 24, marginBottom: 6 }}>🗓️</div>
+              <p style={{ fontFamily: "var(--serif)", fontSize: 18 }}>Appointments</p>
+              <p className="muted">Your antenatal visits, scans &amp; tests — with reminders.</p>
+            </a>
           </div>
         )}
 
         {/* History */}
-        <p className="s-label">Your weeks</p>
+        <p className="s-label">{t("dash.yourweeks", L)}</p>
         <h3 className="feat-title" style={{ marginBottom: 16 }}>Every update, kept for you</h3>
         {all.length === 0 ? (
           <p className="muted">Your weekly pages will collect here as your journey unfolds.</p>

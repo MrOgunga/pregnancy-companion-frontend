@@ -4,6 +4,7 @@ import { currentWeekFrom } from "./babyData";
 import { babyImageFor } from "./babyImages";
 import { sendEmail, emailConfigured, readPublicImage } from "./email";
 import { sendWhatsApp, whatsappConfigured } from "./whatsapp";
+import { pushWeeklyReady } from "./notify";
 
 export type WeeklyJobResult = {
   ok: boolean;
@@ -32,6 +33,9 @@ export async function runWeeklyJob(): Promise<WeeklyJobResult> {
       const week = currentWeekFrom({ dueDate: m.due_date, enteredWeek: m.current_week, createdAt: m.created_at });
       const update = await ensureWeeklyUpdate(m, week);
       generated++;
+
+      // Push "your new week is ready" (deduped once per week).
+      await pushWeeklyReady(m, week).catch(() => {});
 
       const link = base ? `${base}/my-update/${update.slug}` : "";
 
@@ -66,6 +70,8 @@ export async function runWeeklyJob(): Promise<WeeklyJobResult> {
       console.error("weekly job error for", m.email, e);
       errors++;
     }
+    // Anti-ban: space out WhatsApp sends so we don't blast a burst of identical messages.
+    if (whatsappConfigured()) await new Promise((r) => setTimeout(r, 1500 + Math.floor(Math.random() * 2500)));
   }
 
   return {

@@ -14,7 +14,7 @@ export default async function Pricing() {
 
   return (
     <>
-      {mother ? <AppHeader plan={mother.plan} features={features} /> : null}
+      {mother ? <AppHeader plan={mother.plan} lang={mother.language} features={features} /> : null}
       <div className="app-shell">
         <div style={{ textAlign: "center", marginBottom: 40 }}>
           <p className="s-label">Plans</p>

@@ -20,6 +20,8 @@ export default function AdminNav({ active }: { active?: string }) {
         <div className="app-nav">
           {link("/admin", "Overview", "overview")}
           {link("/admin/users", "Users", "users")}
+          {link("/admin/whatsapp", "WhatsApp", "whatsapp")}
+          {link("/admin/notifications", "Notifications", "notifications")}
           {link("/admin/settings", "Settings", "settings")}
           <a href="/" target="_blank">View site ↗</a>
           <button className="btn-ghost" onClick={logout} style={{ textTransform: "uppercase", fontSize: 12 }}>

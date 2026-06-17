@@ -29,7 +29,7 @@ export default async function ChatPage() {
 
   return (
     <>
-      <AppHeader plan={mother.plan} active="chat" features={features} />
+      <AppHeader plan={mother.plan} lang={mother.language} active="chat" features={features} />
       <div className="app-shell">
         <p className="s-label">Talk to Bumply</p>
         <h1 className="s-title" style={{ marginBottom: 16 }}>

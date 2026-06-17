@@ -2,7 +2,7 @@ import { SignJWT, jwtVerify } from "jose";
 import { cookies } from "next/headers";
 
 const secret = new TextEncoder().encode(process.env.AUTH_SECRET || "dev-insecure-secret-change-me");
-export const SESSION_COOKIE = "nerve_session";
+export const SESSION_COOKIE = "bumply_session";
 
 export type SessionData = { sub: string; email: string };
 

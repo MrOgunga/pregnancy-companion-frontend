@@ -25,7 +25,7 @@ export default async function Account() {
 
   return (
     <>
-      <AppHeader plan={mother.plan} active="account" features={features} />
+      <AppHeader plan={mother.plan} lang={mother.language} active="account" features={features} />
       <div className="app-shell" style={{ maxWidth: 640 }}>
         <p className="s-label">Account</p>
         <h1 className="s-title" style={{ marginBottom: 20 }}>Your <em>details</em></h1>

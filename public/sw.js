@@ -1,4 +1,4 @@
-const CACHE = "nerve-v1";
+const CACHE = "bumply-v2";
 const ASSETS = ["/", "/icon.svg"];
 
 self.addEventListener("install", (e) => {
@@ -9,6 +9,38 @@ self.addEventListener("install", (e) => {
 self.addEventListener("activate", (e) => {
   e.waitUntil(caches.keys().then((ks) => Promise.all(ks.filter((k) => k !== CACHE).map((k) => caches.delete(k)))));
   self.clients.claim();
+});
+
+// --- Web push ---
+self.addEventListener("push", (e) => {
+  let data = {};
+  try {
+    data = e.data ? e.data.json() : {};
+  } catch {
+    data = { title: "Bumply", body: e.data ? e.data.text() : "" };
+  }
+  const title = data.title || "Bumply 🌸";
+  const options = {
+    body: data.body || "",
+    icon: "/icon.svg",
+    badge: "/icon.svg",
+    tag: data.tag || undefined,
+    data: { url: data.url || "/dashboard" },
+  };
+  e.waitUntil(self.registration.showNotification(title, options));
+});
+
+self.addEventListener("notificationclick", (e) => {
+  e.notification.close();
+  const url = (e.notification.data && e.notification.data.url) || "/dashboard";
+  e.waitUntil(
+    self.clients.matchAll({ type: "window", includeUncontrolled: true }).then((list) => {
+      for (const c of list) {
+        if (c.url.includes(url) && "focus" in c) return c.focus();
+      }
+      return self.clients.openWindow(url);
+    })
+  );
 });
 
 self.addEventListener("fetch", (e) => {

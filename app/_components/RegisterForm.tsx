@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import { LANGUAGES } from "@/lib/languages";
 
 const WEEKS = Array.from({ length: 40 }, (_, i) => i + 1);
 
@@ -14,6 +15,7 @@ export default function RegisterForm() {
     current_week: "",
     first_pregnancy: "yes",
     dietary_restrictions: "",
+    language: "en",
   });
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
@@ -114,6 +116,16 @@ export default function RegisterForm() {
       <div className="fg">
         <label>Dietary Restrictions (optional)</label>
         <input value={form.dietary_restrictions} onChange={(e) => set("dietary_restrictions", e.target.value)} placeholder="e.g. vegetarian, no nuts, lactose intolerant" />
+      </div>
+      <div className="fg">
+        <label>Preferred Language</label>
+        <select value={form.language} onChange={(e) => set("language", e.target.value)}>
+          {LANGUAGES.map((l) => (
+            <option key={l.code} value={l.code}>
+              {l.native}
+            </option>
+          ))}
+        </select>
       </div>
 
       <button className="f-submit" onClick={submit} disabled={busy}>

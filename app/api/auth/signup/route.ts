@@ -6,6 +6,7 @@ import { createSession } from "@/lib/session";
 import { ensureWeeklyUpdate } from "@/lib/weekly";
 import { sendWelcomeEmail } from "@/lib/email";
 import { currentWeekFrom, trimesterFor } from "@/lib/babyData";
+import { normalizeLang } from "@/lib/languages";
 
 export async function POST(req: Request) {
   try {
@@ -45,6 +46,7 @@ export async function POST(req: Request) {
       first_pregnancy: String(b.first_pregnancy || "yes").toLowerCase() === "yes",
       dietary_restrictions: String(b.dietary_restrictions || "").trim() || undefined,
       source: String(b.source || "website"),
+      language: normalizeLang(b.language),
     });
 
     await createSession({ sub: mother.id, email: mother.email });

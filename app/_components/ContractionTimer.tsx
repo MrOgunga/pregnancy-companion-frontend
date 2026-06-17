@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 
 type C = { start: number; end: number };
-const KEY = "nerve_contractions";
+const KEY = "bumply_contractions";
 
 function fmt(sec: number) {
   const m = Math.floor(sec / 60);

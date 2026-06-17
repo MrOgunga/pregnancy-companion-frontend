@@ -22,7 +22,7 @@ export default async function JournalPage() {
 
   return (
     <>
-      <AppHeader plan={mother.plan} active="journal" features={{ journal: settings.journal_enabled, tools: settings.tools_enabled, chat: settings.chat_enabled }} />
+      <AppHeader plan={mother.plan} lang={mother.language} active="journal" features={{ journal: settings.journal_enabled, tools: settings.tools_enabled, chat: settings.chat_enabled }} />
       <div className="app-shell" style={{ maxWidth: 720 }}>
         <p className="s-label">Journal</p>
         <h1 className="s-title" style={{ marginBottom: 20 }}>Your <em>diary</em></h1>

@@ -5,7 +5,7 @@ import { jwtVerify } from "jose";
 const secret = new TextEncoder().encode(process.env.AUTH_SECRET || "dev-insecure-secret-change-me");
 
 export async function middleware(req: NextRequest) {
-  const token = req.cookies.get("nerve_session")?.value;
+  const token = req.cookies.get("bumply_session")?.value;
   if (token) {
     try {
       await jwtVerify(token, secret);
@@ -21,5 +21,5 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/dashboard/:path*", "/chat/:path*", "/account/:path*", "/journal/:path*", "/tools/:path*"],
+  matcher: ["/dashboard/:path*", "/chat/:path*", "/account/:path*", "/journal/:path*", "/tools/:path*", "/appointments/:path*"],
 };

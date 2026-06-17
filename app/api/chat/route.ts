@@ -3,6 +3,7 @@ import { resolveModel } from "@/lib/settings";
 import { getSession } from "@/lib/session";
 import { getMotherById, getWeeklyUpdateByWeek, recentChat, saveChat, recentJournalSummary } from "@/lib/queries";
 import { currentWeekFrom, trimesterFor } from "@/lib/babyData";
+import { languageInstruction } from "@/lib/languages";
 
 function textResponse(body: string, status = 200) {
   return new Response(body, { status, headers: { "Content-Type": "text/plain; charset=utf-8", "Cache-Control": "no-store" } });
@@ -36,7 +37,8 @@ You are speaking with ${mother.full_name}, currently in week ${week} (${trimeste
     mother.due_date ? `, due ${mother.due_date}` : ""
   }. First pregnancy: ${mother.first_pregnancy ? "yes" : "no"}. Dietary notes: ${mother.dietary_restrictions || "none"}. ${context}${journalBlock}
 Be warm, brief and reassuring. Use her name occasionally. Give practical, trimester-appropriate guidance.
-You are NOT a doctor: for any warning signs (heavy bleeding, severe or persistent pain, reduced fetal movement, fever, vision changes, severe swelling), gently and clearly urge her to contact her healthcare provider or go to a clinic. Never diagnose or prescribe.`;
+You are NOT a doctor: for any warning signs (heavy bleeding, severe or persistent pain, reduced fetal movement, fever, vision changes, severe swelling), gently and clearly urge her to contact her healthcare provider or go to a clinic. Never diagnose or prescribe.
+${languageInstruction(mother.language || "en")}`;
 
   const history = await recentChat(mother.id, 16);
 

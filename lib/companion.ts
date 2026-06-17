@@ -1,0 +1,48 @@
+import { ai, AI_MODEL } from "./ai";
+import { resolveModel } from "./settings";
+import type { Mother } from "./queries";
+import { getWeeklyUpdateByWeek, recentChat, saveChat, recentJournalSummary } from "./queries";
+import { currentWeekFrom, trimesterFor } from "./babyData";
+import { languageInstruction } from "./languages";
+
+// A single, non-streaming Bumply reply for WhatsApp — grounded in her week, profile,
+// recent journal and chat history. Mirrors the in-app chat persona, tuned for WhatsApp.
+export async function bumplyReply(mother: Mother, userText: string): Promise<string> {
+  const week = currentWeekFrom({ dueDate: mother.due_date, enteredWeek: mother.current_week, createdAt: mother.created_at });
+  const update = await getWeeklyUpdateByWeek(mother.id, week);
+  const context = update
+    ? `This week's focus: ${update.baby_development || ""}. Affirmation: ${update.affirmation || ""}.`
+    : "";
+  const journal = await recentJournalSummary(mother.id, 5);
+  const journalBlock = journal ? `\nHer recent journal check-ins (reference naturally if relevant):\n${journal}` : "";
+
+  const system = `You are Bumply, a warm, caring AI pregnancy companion, chatting with ${mother.full_name} over WhatsApp.
+She is in week ${week} (${trimesterFor(week)} trimester)${mother.due_date ? `, due ${mother.due_date}` : ""}. First pregnancy: ${
+    mother.first_pregnancy ? "yes" : "no"
+  }. Dietary notes: ${mother.dietary_restrictions || "none"}. ${context}${journalBlock}
+Reply like a caring friend on WhatsApp: warm, brief (1–4 short sentences), an occasional emoji, and use her first name sometimes. Give practical, trimester-appropriate guidance.
+You are NOT a doctor: for any warning signs (heavy bleeding, severe or persistent pain, reduced fetal movement, fever, vision changes, severe swelling), clearly and gently urge her to contact her healthcare provider or go to a clinic. Never diagnose or prescribe.
+${languageInstruction(mother.language || "en")}`;
+
+  const history = await recentChat(mother.id, 12);
+  const model = await resolveModel(AI_MODEL);
+  const completion = await ai.chat.completions.create({
+    model,
+    temperature: 0.7,
+    max_tokens: 400,
+    messages: [
+      { role: "system", content: system },
+      ...history.map((h) => ({ role: h.role as "user" | "assistant", content: h.content })),
+      { role: "user", content: userText },
+    ],
+  });
+
+  const reply = completion.choices?.[0]?.message?.content?.trim() || "I'm right here with you, mama 🌸";
+  try {
+    await saveChat(mother.id, "user", userText, week);
+    await saveChat(mother.id, "assistant", reply, week);
+  } catch (e) {
+    console.error("whatsapp chat save error:", e);
+  }
+  return reply;
+}

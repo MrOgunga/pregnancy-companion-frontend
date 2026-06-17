@@ -15,5 +15,8 @@ next-env.d.ts
 # os / editor
 .DS_Store
 
+# installed agent skills (tooling, not app source)
+.agents/
+
 # local working files (n8n workflow exports, data dumps)
 others/*.json

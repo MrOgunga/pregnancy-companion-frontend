@@ -62,7 +62,7 @@ export default function ChatPanel({
     <div className="card" style={{ padding: 0, overflow: "hidden", display: "flex", flexDirection: "column", height: "68vh" }}>
       <div ref={boxRef} className="np-messages" style={{ flex: 1, height: "auto" }}>
         {msgs.map((m, i) => (
-          <div key={i} className={"np-msg " + (m.role === "user" ? "user" : "nerve")} style={{ maxWidth: "80%" }}>
+          <div key={i} className={"np-msg " + (m.role === "user" ? "user" : "bumply")} style={{ maxWidth: "80%" }}>
             {m.content || "…"}
           </div>
         ))}

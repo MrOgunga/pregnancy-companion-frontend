@@ -2,7 +2,7 @@ import { SignJWT, jwtVerify } from "jose";
 import { cookies } from "next/headers";
 
 const secret = new TextEncoder().encode(process.env.AUTH_SECRET || "dev-insecure-secret-change-me");
-export const ADMIN_COOKIE = "nerve_admin";
+export const ADMIN_COOKIE = "bumply_admin";
 
 export async function createAdminSession() {
   const token = await new SignJWT({ role: "admin" })

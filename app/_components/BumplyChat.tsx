@@ -1,7 +1,7 @@
 "use client";
 import { useRef, useState } from "react";
 
-type Msg = { who: "nerve" | "user"; text: string };
+type Msg = { who: "bumply" | "user"; text: string };
 
 const CANNED = [
   "Hello mama! 🌸 I'm Bumply, your pregnancy companion. How are you feeling today?",
@@ -36,7 +36,7 @@ export default function BumplyChat({ live = false }: { live?: boolean }) {
     setOpen(next);
     if (next && msgs.length === 0) {
       setTimeout(() => {
-        setMsgs([{ who: "nerve", text: CANNED[0] }]);
+        setMsgs([{ who: "bumply", text: CANNED[0] }]);
         scroll();
       }, 350);
     }
@@ -56,7 +56,7 @@ export default function BumplyChat({ live = false }: { live?: boolean }) {
         const idx = (cannedIdx + 1) % CANNED.length;
         setCannedIdx(idx);
         setTyping(false);
-        setMsgs((m) => [...m, { who: "nerve", text: CANNED[idx] }]);
+        setMsgs((m) => [...m, { who: "bumply", text: CANNED[idx] }]);
         scroll();
       }, 1100 + Math.random() * 700);
       return;
@@ -77,19 +77,19 @@ export default function BumplyChat({ live = false }: { live?: boolean }) {
       setTyping(false);
       setMsgs((m) => [
         ...m,
-        { who: "nerve", text: data.reply || "I'm having trouble responding right now, mama. Try again in a moment. 💕" },
+        { who: "bumply", text: data.reply || "I'm having trouble responding right now, mama. Try again in a moment. 💕" },
       ]);
       scroll();
     } catch {
       setTyping(false);
-      setMsgs((m) => [...m, { who: "nerve", text: "I couldn't reach my brain just now — please try again. 🌸" }]);
+      setMsgs((m) => [...m, { who: "bumply", text: "I couldn't reach my brain just now — please try again. 🌸" }]);
       scroll();
     }
   }
 
   return (
-    <div className="nerve-bubble">
-      <div className={"nerve-popup" + (open ? " open" : "")}>
+    <div className="bumply-bubble">
+      <div className={"bumply-popup" + (open ? " open" : "")}>
         <div className="np-header">
           <div className="np-avatar">🌸</div>
           <div>
@@ -128,9 +128,9 @@ export default function BumplyChat({ live = false }: { live?: boolean }) {
           </button>
         </div>
       </div>
-      <button className="nerve-btn" onClick={toggle} aria-label="Open Bumply chat">
+      <button className="bumply-btn" onClick={toggle} aria-label="Open Bumply chat">
         🌸
-        <div className="nerve-online" />
+        <div className="bumply-online" />
       </button>
     </div>
   );

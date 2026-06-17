@@ -87,3 +87,27 @@ create table if not exists preg_companion.app_settings (
   value      text,
   updated_at timestamptz not null default now()
 );
+
+-- Language preference (en | pcm | yo | ha | ig). Added post-launch, idempotent.
+alter table preg_companion.mothers add column if not exists language text not null default 'en';
+
+-- Web-push subscriptions (one row per device/browser)
+create table if not exists preg_companion.push_subscriptions (
+  id         uuid primary key default gen_random_uuid(),
+  mother_id  uuid not null references preg_companion.mothers(id) on delete cascade,
+  endpoint   text not null unique,
+  p256dh     text not null,
+  auth       text not null,
+  created_at timestamptz not null default now()
+);
+create index if not exists idx_push_mother on preg_companion.push_subscriptions(mother_id);
+
+-- De-dupe log so reminders/milestones/daily/weekly pushes fire once each
+create table if not exists preg_companion.notification_log (
+  id         uuid primary key default gen_random_uuid(),
+  mother_id  uuid not null references preg_companion.mothers(id) on delete cascade,
+  kind       text not null,   -- 'weekly' | 'anc' | 'milestone' | 'daily' | 'broadcast'
+  ref        text not null,   -- e.g. 'week-8', 'anc-20', 'milestone-13', 'daily-2026-06-17'
+  created_at timestamptz not null default now(),
+  unique (mother_id, kind, ref)
+);

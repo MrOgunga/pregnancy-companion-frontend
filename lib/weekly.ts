@@ -6,6 +6,7 @@ import { getWeeklyUpdateByWeek } from "./queries";
 import { randomBytes } from "node:crypto";
 import { trimesterFor, getBabyData, babySizeText } from "./babyData";
 import { babyImageFor } from "./babyImages";
+import { languageInstruction } from "./languages";
 
 export { trimesterFor };
 
@@ -79,6 +80,7 @@ Rules:
 - Keep tone warm, reassuring, and personal. Address her by name.
 - If first pregnancy is "yes", make firstTimeMomTip useful. If not, return an empty string.
 - Respect the dietary restrictions in every meal.
+- Keep all JSON keys exactly as shown in English, but write every VALUE (text the mother reads) in her language. ${languageInstruction(mother.language || "en")} Use local Nigerian foods in the meal plan where natural.
 - Do not output markdown. Do not wrap JSON in backticks.`;
 }
 
@@ -134,13 +136,13 @@ export function buildHtml(mother: Mother, week: number, c: WeeklyContent): strin
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Week ${week} · ${esc(mother.full_name)}'s Pregnancy Journey</title>
 <style>
-  :root{--pink:#e87b92;--ink:#2d1b2e;--muted:#766275;--cream:#fffaf6;--line:rgba(45,27,46,.1)}
+  :root{--pink:#C97B5A;--ink:#2E2620;--muted:#6b5a4d;--cream:#FBF7F1;--line:rgba(46,38,32,.12)}
   *{box-sizing:border-box;margin:0;padding:0}
   body{font-family:'DM Sans',system-ui,sans-serif;background:var(--cream);color:var(--ink);line-height:1.7;padding:28px 16px}
   .page{max-width:760px;margin:0 auto}
-  .hero{background:linear-gradient(135deg,#fef0f3,#f5f0ff);border:1px solid var(--line);border-radius:24px;padding:36px;text-align:center;margin-bottom:24px}
+  .hero{background:linear-gradient(135deg,#F6E9E1,#EDF1E7);border:1px solid var(--line);border-radius:24px;padding:36px;text-align:center;margin-bottom:24px}
   .eyebrow{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--pink);font-weight:600}
-  .babyimg{width:200px;height:200px;object-fit:cover;border-radius:50%;display:block;margin:18px auto 8px;border:5px solid #fff;box-shadow:0 8px 28px rgba(232,123,146,.28)}
+  .babyimg{width:200px;height:200px;object-fit:cover;border-radius:50%;display:block;margin:18px auto 8px;border:5px solid #fff;box-shadow:0 8px 28px rgba(201,123,90,.28)}
   .babystage{font-size:12px;color:var(--muted);letter-spacing:.04em}
   h1{font-family:'Cormorant Garamond',Georgia,serif;font-weight:400;font-size:38px;margin:8px 0}
   .block{background:#fff;border:1px solid var(--line);border-radius:18px;padding:24px;margin-bottom:18px}
@@ -149,12 +151,12 @@ export function buildHtml(mother: Mother, week: number, c: WeeklyContent): strin
   ul{list-style:none;display:flex;flex-direction:column;gap:8px}ul li{font-size:14px}
   table{width:100%;border-collapse:collapse;font-size:12px}
   th,td{border:1px solid var(--line);padding:8px;text-align:left;vertical-align:top}
-  th{background:#fef0f3;color:var(--ink)}.day{font-weight:600;background:#faf5f8;white-space:nowrap}
+  th{background:#F6E9E1;color:var(--ink)}.day{font-weight:600;background:#F3EDE4;white-space:nowrap}
   .pgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-  .pcard{background:#ebf5fb;border-radius:12px;padding:14px}.pcard h4{font-size:13px;margin-bottom:4px}.pcard p{font-size:12px;color:var(--muted)}
+  .pcard{background:#EBF2EE;border-radius:12px;padding:14px}.pcard h4{font-size:13px;margin-bottom:4px}.pcard p{font-size:12px;color:var(--muted)}
   .chip{display:inline-block;background:#fff;border:1px solid var(--line);border-radius:100px;padding:4px 12px;font-size:12px;margin:3px}
   .affirm{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:22px;text-align:center;color:var(--ink)}
-  .ft{background:#fff8e7;border-color:#f0d98c}
+  .ft{background:#FBF1DC;border-color:#E8B96F}
   .muted{color:var(--muted);font-size:13px}
   @media(max-width:560px){.pgrid{grid-template-columns:1fr}h1{font-size:30px}}
 </style></head><body><div class="page">
