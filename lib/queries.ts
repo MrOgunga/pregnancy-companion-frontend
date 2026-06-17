@@ -1,4 +1,5 @@
 import { sql } from "./db";
+import { randomBytes } from "node:crypto";
 
 export type Mother = {
   id: string;
@@ -18,6 +19,8 @@ export type Mother = {
   plan: "free" | "premium";
   language: string | null;
   preferences: Record<string, unknown> | null;
+  telegram_chat_id: string | null;
+  telegram_link_token: string | null;
   last_sent_at: string | null;
   created_at: string;
 };
@@ -102,6 +105,30 @@ export async function updateMotherLanguage(id: string, language: string) {
 
 export async function updateMotherPreferences(id: string, prefs: Record<string, unknown>) {
   await sql`update mothers set preferences = ${sql.json(prefs as Parameters<typeof sql.json>[0])} where id = ${id}`;
+}
+
+export async function getMotherByTelegram(chatId: string): Promise<Mother | null> {
+  const rows = await sql<Mother[]>`select * from mothers where telegram_chat_id = ${chatId} limit 1`;
+  return rows[0] ?? null;
+}
+
+export async function linkTelegramChat(motherId: string, chatId: string | null) {
+  await sql`update mothers set telegram_chat_id = ${chatId} where id = ${motherId}`;
+}
+
+// Per-mom link code shown in the app and pasted to the bot to connect.
+export async function getOrCreateTelegramToken(motherId: string): Promise<string> {
+  const rows = await sql<{ telegram_link_token: string | null }[]>`select telegram_link_token from mothers where id = ${motherId}`;
+  if (rows[0]?.telegram_link_token) return rows[0].telegram_link_token;
+  const token = randomBytes(5).toString("hex"); // 10-char code
+  await sql`update mothers set telegram_link_token = ${token} where id = ${motherId}`;
+  return token;
+}
+
+export async function getMotherByTelegramToken(token: string): Promise<Mother | null> {
+  if (!token) return null;
+  const rows = await sql<Mother[]>`select * from mothers where telegram_link_token = ${token} limit 1`;
+  return rows[0] ?? null;
 }
 
 export async function setPlan(id: string, plan: "free" | "premium") {

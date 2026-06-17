@@ -121,8 +121,10 @@ export async function logoutInstance(): Promise<Result> {
 // WhatsApp bans unofficial (Baileys) numbers that behave like bots: taking calls,
 // blasting identical messages with no typing, replying in groups, etc. These
 // settings + humanised send (typing presence + jittered delay) reduce that risk.
-const SEND_DELAY_BASE = Number(process.env.WHATSAPP_SEND_DELAY_MS || 1100);
-const SEND_DELAY_JITTER = Number(process.env.WHATSAPP_SEND_DELAY_JITTER_MS || 1800);
+// Default OFF: the typing-presence delay can make some Baileys sessions silently
+// fail to flush messages. Opt back in with WHATSAPP_SEND_DELAY_MS once delivery is stable.
+const SEND_DELAY_BASE = Number(process.env.WHATSAPP_SEND_DELAY_MS || 0);
+const SEND_DELAY_JITTER = Number(process.env.WHATSAPP_SEND_DELAY_JITTER_MS || 0);
 
 export function humanDelayMs(): number {
   return SEND_DELAY_BASE + Math.floor(Math.random() * Math.max(0, SEND_DELAY_JITTER));
@@ -148,10 +150,10 @@ export async function applyAntiBanSettings(): Promise<Result> {
 export async function sendText(to: string, text: string): Promise<Result> {
   const number = normalizeNumber(to);
   if (!number) return { ok: false, error: "no phone number" };
-  const delay = humanDelayMs(); // Evolution shows "typing…" for this long before sending
+  const delay = humanDelayMs(); // 0 by default; Evolution shows "typing…" for this long before sending
   const body =
     VERSION === "v1"
-      ? { number, options: { delay, presence: "composing" }, textMessage: { text } }
-      : { number, text, delay };
+      ? { number, ...(delay > 0 ? { options: { delay, presence: "composing" } } : {}), textMessage: { text } }
+      : { number, text, ...(delay > 0 ? { delay } : {}) };
   return evo(`/message/sendText/${EVOLUTION_INSTANCE}`, { method: "POST", body: JSON.stringify(body) });
 }

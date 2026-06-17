@@ -94,6 +94,12 @@ alter table preg_companion.mothers add column if not exists language text not nu
 -- User customization: { tone, focus[], about } — personalises the AI.
 alter table preg_companion.mothers add column if not exists preferences jsonb not null default '{}'::jsonb;
 
+-- Telegram chat link (set when a mom links her Telegram to her account).
+alter table preg_companion.mothers add column if not exists telegram_chat_id text;
+alter table preg_companion.mothers add column if not exists telegram_link_token text;
+create index if not exists idx_mothers_telegram on preg_companion.mothers(telegram_chat_id);
+create index if not exists idx_mothers_tgtoken on preg_companion.mothers(telegram_link_token);
+
 -- Web-push subscriptions (one row per device/browser)
 create table if not exists preg_companion.push_subscriptions (
   id         uuid primary key default gen_random_uuid(),

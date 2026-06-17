@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import { getSession } from "@/lib/session";
-import { getMotherById } from "@/lib/queries";
+import { getMotherById, getOrCreateTelegramToken } from "@/lib/queries";
+import { telegramConfigured, telegramBotUsername } from "@/lib/telegram";
 import { getSettings } from "@/lib/settings";
 import { normalizeLang } from "@/lib/languages";
 import { t } from "@/lib/i18n";
@@ -8,6 +9,7 @@ import { getPrefs } from "@/lib/personalize";
 import AppHeader from "../_components/AppHeader";
 import SubscribeButton from "../_components/SubscribeButton";
 import PreferencesForm from "../_components/PreferencesForm";
+import TelegramLink from "../_components/TelegramLink";
 
 export const dynamic = "force-dynamic";
 
@@ -63,6 +65,15 @@ export default async function Account() {
         </div>
 
         <PreferencesForm prefs={getPrefs(mother)} lang={mother.language} />
+
+        {telegramConfigured() && (
+          <TelegramLink
+            linked={!!mother.telegram_chat_id}
+            code={await getOrCreateTelegramToken(mother.id)}
+            botUser={telegramBotUsername()}
+            lang={mother.language}
+          />
+        )}
       </div>
     </>
   );

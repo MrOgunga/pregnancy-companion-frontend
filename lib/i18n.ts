@@ -60,6 +60,11 @@ const STRINGS: Dict = {
   "account.about": { en: "Anything Bumply should know about you?", pcm: "Anything Bumply suppose know about you?", yo: "Ǹjẹ́ ohunkóhun tí Bumply yẹ kó mọ̀ nípa rẹ?", ha: "Akwai abin da Bumply ya kamata ya sani game da ke?", ig: "Enwere ihe Bumply kwesịrị ịmara gbasara gị?" },
   "account.aboutPlaceholder": { en: "e.g. I'm a nurse · expecting twins · vegetarian · first baby after a loss", pcm: "e.g. I be nurse · I dey expect twins · I no dey chop meat · first baby after loss", yo: "f.a. nọ́ọ̀sì ni mí · ìbéjì ni · kì í jẹ ẹran · ọmọ àkọ́kọ́ lẹ́yìn àdánù", ha: "misali, ni ma'aikaciyar lafiya ce · ina sa ran tagwaye · ba na cin nama · jariri na farko bayan asara", ig: "dịka, abụ m nọọsụ · ejìm ejima · anaghị m eri anụ · nwa mbụ mgbe ọnwụ gasịrị" },
   "account.saved": { en: "✓ Saved — Bumply will remember.", pcm: "✓ Saved — Bumply go remember.", yo: "✓ A ti fipamọ́ — Bumply yóò rántí.", ha: "✓ An ajiye — Bumply zai tuna.", ig: "✓ Echekwala — Bumply ga-echeta." },
+  "account.telegram": { en: "Chat on Telegram", pcm: "Chat on Telegram", yo: "Bá Bumply sọ̀rọ̀ lórí Telegram", ha: "Yi hira a Telegram", ig: "Kparịta na Telegram" },
+  "account.telegramSub": { en: "Open the bot, then paste your link code below to connect — and chat with Bumply anytime, even by voice.", pcm: "Open the bot, then paste your link code to connect — chat with Bumply anytime.", yo: "Ṣí bot náà, lẹ́yìn náà lẹ̀ kóòdù ìsopọ̀ rẹ láti so pọ̀ — kí o sì bá Bumply sọ̀rọ̀ nígbàkígbà.", ha: "Buɗe bot ɗin, sannan ka liƙa lambar haɗin ka don haɗawa — ka yi hira da Bumply kowane lokaci.", ig: "Mepee bot ahụ, wee mado koodu njikọ gị iji jikọọ — soro Bumply kparịta oge ọ bụla." },
+  "account.telegramCode": { en: "Your link code", pcm: "Your link code", yo: "Kóòdù ìsopọ̀ rẹ", ha: "Lambar haɗin ka", ig: "Koodu njikọ gị" },
+  "account.telegramLinked": { en: "✓ Telegram connected", pcm: "✓ Telegram connected", yo: "✓ Telegram ti so pọ̀", ha: "✓ An haɗa Telegram", ig: "✓ Ejikọrọ Telegram" },
+  "account.telegramOpen": { en: "Open the bot →", pcm: "Open the bot →", yo: "Ṣí bot náà →", ha: "Buɗe bot →", ig: "Mepee bot →" },
   "common.saved": { en: "Saved", pcm: "Saved", yo: "A ti fipamọ́", ha: "An ajiye", ig: "Echekwala" },
 
   // Dashboard — extra strings
